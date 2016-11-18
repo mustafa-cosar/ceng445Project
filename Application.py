@@ -1,10 +1,10 @@
 import os
 
 class Application(object):
+    """Application."""
 
     _componentPath = "components/"
 
-    """Application."""
     def __init__(self):
         super(Application, self).__init__()
 
