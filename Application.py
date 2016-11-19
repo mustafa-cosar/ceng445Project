@@ -1,5 +1,6 @@
 import os
 import importlib
+import uuid
 
 class Application(object):
     """Application."""
@@ -8,8 +9,9 @@ class Application(object):
 
     def __init__(self):
         super(Application, self).__init__()
-        self.componontsModule = importlib.__import__(Application._componentPath)
+        self._componentsModule = importlib.__import__(Application._componentPath)
         self._loadedComponents = {}
+        self._instances = {}
 
     def available(self):
         return self.componentsModule.__all__
@@ -31,10 +33,12 @@ class Application(object):
         pass
 
     def addInstance(self,  componentName, x, y):
-        pass
+        instanceID = str(uuid.uuid4())
+        self._instances[instanceID] = (getattr(self._loadedComponents[componentName], componentName)(), x, y)
+        return instanceID
 
     def instances(self):
-        pass
+        return self._instances
 
     def removeInstance(self, id):
         del self._instances[id]
