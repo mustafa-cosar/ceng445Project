@@ -9,14 +9,16 @@ class Application(object):
     def __init__(self):
         super(Application, self).__init__()
         self.componontsModule = importlib.__import__(Application._componentPath)
-
         self._loadedComponents = {}
 
-
     def available(self):
-        pass
+        return self.componentsModule.__all__
 
     def loaded(self):
+        retDic = {}
+        for cName, compFunc in self._loadedComponents:
+            retDic[cName] = compFunc.description()
+        return retDic
 
     def load(self,  name):
         if name not in self._loadedComponents.keys():
@@ -34,8 +36,8 @@ class Application(object):
     def instances(self):
         pass
 
-    def removeInstance(self,  id):
-        pass
+    def removeInstance(self, id):
+        del self._instances[id]
 
     def callMethod(self,  id, methodName, *params):
         pass
