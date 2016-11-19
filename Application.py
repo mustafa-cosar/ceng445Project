@@ -44,7 +44,7 @@ class Application(object):
         del self._instances[id]
 
     def callMethod(self,  id, methodName, *params):
-        pass
+        getattr(self._instances[id],methodName)(params)
 
     def execute(self):
         pass
