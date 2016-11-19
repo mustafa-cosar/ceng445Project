@@ -1,12 +1,14 @@
 import os
+import importlib
 
 class Application(object):
     """Application."""
 
-    _componentPath = "components/"
+    _componentPath = "components"
 
     def __init__(self):
         super(Application, self).__init__()
+        self.componontsModule = importlib.__import__(Application._componentPath)
 
         self._loadedComponents = {}
 
@@ -15,27 +17,27 @@ class Application(object):
         pass
 
     def loaded(self):
-        return self._loadedComponents
 
-    def load(self):
+    def load(self,  name):
+        if name not in self._loadedComponents.keys():
+            self._loadedComponents[name] = importlib.import_module('.' + name, Application._componentPath)
+
+    def loadDesign(self,  path):
         pass
 
-    def loadDesign(self, path):
+    def saveDesign(self,  path):
         pass
 
-    def saveDesign(self, path):
-        pass
-
-    def addInstance(self, componentName, x, y):
+    def addInstance(self,  componentName, x, y):
         pass
 
     def instances(self):
         pass
 
-    def removeInstance(self, id):
+    def removeInstance(self,  id):
         pass
 
-    def callMethod(self, id, methodName, *params):
+    def callMethod(self,  id, methodName, *params):
         pass
 
     def execute(self):
