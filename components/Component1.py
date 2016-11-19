@@ -1,4 +1,9 @@
 import math
+from ..Component import Component
 
-def f():
-    pass
+class Component1(Component):
+    def __init__(self):
+        super(Component1, self).__init__()
+
+    def __str__(self):
+        return "Component1"
