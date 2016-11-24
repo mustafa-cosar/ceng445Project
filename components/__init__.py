@@ -1,1 +1,3 @@
-__all__ = ['Component1']
+from .Like import Like
+
+__all__ = ['Like']
