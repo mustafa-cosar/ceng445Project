@@ -1,5 +1,4 @@
 from .Component import Component
-from ..Database import Database
 
 class Dislike(Component):
 
@@ -8,8 +7,7 @@ class Dislike(Component):
 
         self.attributeTypes['userName'] = 'string'
         self.attributeTypes['postID'] = 'string'
-
-        self._DB = Database()
+        self.attributeTypes['DB'] = 'database'
 
     def __str__(self):
         return "Dislike"
@@ -19,7 +17,7 @@ class Dislike(Component):
 
     def execute(self):
 
-        result = _DB.addDislike(self['userID'], self['postID'])
+        result = self['DB'].addDislike(self['userID'], self['postID'])
 
         if result == True:
             return '<div>Dislike successful</div>'
