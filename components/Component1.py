@@ -11,10 +11,10 @@ class Component1(Component):
         return "Component1"
 
     def description(self):
-        pass
-
-    def methods(self):
-        pass
+        return ""
 
     def execute(self):
         pass
+
+    def f(self):
+        """ Function f() """

@@ -1,3 +1,5 @@
+import inspect
+
 class Component(object):
     """Component."""
 
@@ -23,7 +25,13 @@ class Component(object):
         self.items[key] = value
 
     def methods(self):
-        pass
+        myMethods = inspect.getmembers(self, predicate=inspect.ismethod)
+        methodsWithDescriptions = []
+        for methodName, value in myMethods:
+            desc = inspect.getdoc(getattr(self, methodName))
+            if desc != None:
+                methodsWithDescriptions.append((methodName, desc))
+        return methodsWithDescriptions
 
     def execute(self):
         pass
