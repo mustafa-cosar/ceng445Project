@@ -35,6 +35,7 @@ class Database:
 
     def addUser(self, uName, pwd):
         self._cursor.execute( "insert into User values (?,?)", (uName,pwd) )
+
     def getUser(self, uName, pwd):
         self._cursor.execute("select password from User where userName = ?", (uName,))
         fetchedPwd = self._cursor.fetchone()
@@ -43,6 +44,7 @@ class Database:
             return True
         else:
             return False
+
     def getTopic(self, tName):
         self._cursor.execute("select * from Topic where topicName = ?", (tName,))
         fetched = self._cursor.fetchone()
@@ -50,12 +52,14 @@ class Database:
             return True
         else:
             return False
+
     def addTopic(self, tName):
         self._cursor.execute("select * from Topic where topicName = ?", (tName,))
         fetched = self._cursor.fetchone()
         if(fetched == None):
             self._cursor.execute("insert into Topic Values (?) " ,(tName,))
             self._con.commit()
+        
     def addPost(self, user, topic, post):
         try:
             self._cursor.execute("insert into Post Values ( ?,?,? ) ", (user,topic,post) )
