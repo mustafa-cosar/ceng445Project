@@ -1,14 +1,13 @@
-from ..Component import Component
-from ..Database import Database
+from .Component import Component
 
 class Login(Component):
         def __init__(self):
             super(Login, self).__init__()
             self.attributeTypes["username"] = "string"
             self.attributeTypes["password"] = "string"
-            self._DB = Database()
+            self.attributeTypes['DB'] = 'database'
 
-        def __str__(def):
+        def __str__(self):
             return "User Login"
 
         def description(self):
@@ -17,7 +16,7 @@ class Login(Component):
         def execute(self):
             uName = self["username"]
             uPwd = self["password"]
-            if(self._DB.getUser(uName, uPwd)):
+            if(self['DB'].getUser(uName, uPwd)):
                 return "<div> User Login Succesful </div>"
             else:
                 return "<div >Bad Username Password Combination </div>"
