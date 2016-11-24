@@ -11,66 +11,146 @@ def Singleton(cls):
 @Singleton
 class Database:
     def __init__(self):
-        self._con = sqlite3.connect(':memory:')
+        self._con = sqlite3.connect('ceng445.db')
         self._cursor = self._con.cursor()
         userTable = "create table if not exists \
-                     User (userName text primary key, \
-                     password text)"
+                     User ( ID INTEGER PRIMARY KEY autoincrement,\
+                     userName text not null, \
+                     password text not null )"
         self._cursor.execute(userTable)
 
         topicTable = "create table if not exists \
-                      Topic (topicName text primary key)"
-
+                      Topic (ID integer primary key autoincrement, \
+                      topicName text not null )"
         self._cursor.execute(topicTable)
 
         postTable = "create table if not exists \
-                     Post ( \
-                     postUser text, \
-                     postTopic text, \
-                     postText text, \
+                     Post ( ID integer primary key autoincrement, \
+                     userID integer, \
+                     topicID integer, \
+                     postText text not null, \
+                     postUser text not null, \
+                     postTopic text not null, \
                      FOREIGN KEY(postUser) REFERENCES User (userName), \
-                     FOREIGN KEY(postTopic) REFERENCES Topic (topicName), \
-                     primary key(postUser, postTopic))"
+                     FOREIGN KEY(postTopic) REFERENCES Topic (topicName),\
+                     FOREIGN KEY(userID) REFERENCES User (ID), \
+                     FOREIGN KEY(topicID) REFERENCES Topic (ID) )"
         self._cursor.execute(postTable)
 
-    def addUser(self, uName, pwd):
-        self._cursor.execute( "insert into User values (?,?)", (uName,pwd) )
+        likeTable = "create table if not exists \
+                    Like ( likingUserID integer not null, \
+                    postID integer not null, \
+                    FOREIGN KEY(likingUserID) REFERENCES User (ID),\
+                    FOREIGN KEY(postID) REFERENCES Post (ID), \
+                    primary key(likingUserID, postID) )"
+        self._cursor.execute(likeTable)
+
+        dislikeTable = "create table if not exists \
+                    Dislike ( dislikingUserID integer not null, \
+                    postID integer not null, \
+                    FOREIGN KEY(dislikingUserID) REFERENCES User (ID), \
+                    FOREIGN KEY(postID) REFERENCES Post (ID), \
+                    primary key(dislikingUserID, postID) )"
+        self._cursor.execute(dislikeTable)
+
+
 
     def getUser(self, uName, pwd):
-        self._cursor.execute("select password from User where userName = ?", (uName,))
-        fetchedPwd = self._cursor.fetchone()
-        print(fetchedPwd)
-        if(fetchedPwd != None and pwd in fetchedPwd):
+        self._cursor.execute("select ID, password from User where userName = ?", (uName,))
+        ID, password = self._cursor.fetchone()
+        if(password == pwd):
+            return ID
+        else:
+            return None
+
+    def _getUser(self, uID):
+        self._cursor.execute("select userName from User where ID = ?", (uID,))
+        return self._cursor.fetchone()
+
+    def addUser(self, uName, pwd):
+        self._cursor.execute( "insert into User (userName, password) values (?,?)", (uName,pwd) )
+        if(self.getUser(uName, pwd)):
             return True
         else:
             return False
+
+    def _getTopic(self, tID):
+        self._cursor.execute("select topicName from Topic where ID = ?", (tID,))
+        result = self._cursor.fetchone()
+        if(result != None):
+            return result[0]
+        else:
+            return None
 
     def getTopic(self, tName):
-        self._cursor.execute("select * from Topic where topicName = ?", (tName,))
-        fetched = self._cursor.fetchone()
-        if(fetched != None):
-            return True
+        self._cursor.execute("select ID from Topic where topicName = ?", (tName,))
+        result = self._cursor.fetchone()
+        if(result != None):
+            return result[0]
         else:
-            return False
+            return None
 
     def addTopic(self, tName):
-        self._cursor.execute("select * from Topic where topicName = ?", (tName,))
+        self._cursor.execute("select ID from Topic where topicName = ?", (tName,))
         fetched = self._cursor.fetchone()
         if(fetched == None):
-            self._cursor.execute("insert into Topic Values (?) " ,(tName,))
-            self._con.commit()
-        
-    def addPost(self, user, topic, post):
-        try:
-            self._cursor.execute("insert into Post Values ( ?,?,? ) ", (user,topic,post) )
-            print("Added Post!")
-        except sqlite3.IntegrityError:
-            print("Cannot Add Post!")
+            self._cursor.execute("insert into Topic (topicName) Values (?) " ,(tName,))
+            return self._cursor.lastrowid
+        else:
+            return None
 
-    def getPosts(self, uName):
-        self._cursor.execute("select * from Post where postUser = ?", (uName,))
-        all_rows = self._cursor.fetchall()
-        print(all_rows)
+    def addPost(self, user, topic, post):
+        uID = self._getUser(user)
+        tID = self._getTopic(topic)
+        if(uID == None or tID == None):
+            return None
+        uID = uID[0]
+        tID = tID[0]
+        self._cursor.execute("insert into Post (userID, topicID, postText, postUser, postTopic) values (?,?,?,?,?)", (user,topic, post, uID, tID))
+        return self._cursor.lastrowid
+
+    def addLike(self, userID, postID):
+        self._cursor.execute("select * from User where ID = ?", (userID,))
+        if(self._cursor == None):
+            return False
+        self._cursor.execute("select * from Post where ID = ?", (userID,))
+        if(self._cursor == None):
+            return False
+        self._cursor.execute("select * from Dislike where dislikingUserID = ? and postID = ? ", (userID, postID))
+        if(self._cursor.lastrowid != None):
+            self.deleteDislike(userID, postID)
+        self._cursor.execute("insert into Like values (?,?)", (userID,postID))
+        return True
+
+    def deleteLike(self,userID, postID):
+        self._cursor.execute("delete from Like where likingUserID = ? and postID = ? ", (userID, postID))
+
+    def deleteDislike(self,userID, postID):
+        self._cursor.execute("delete from Dislike where dislikingUserID = ? and postID = ? ", (userID, postID))
+
+
+    def addDislike(self, userID, postID):
+        self._cursor.execute("select * from User where ID = ?", (userID,))
+        if(self._cursor == None):
+            return False
+        self._cursor.execute("select * from Post where ID = ?", (userID,))
+        if(self._cursor == None):
+            return False
+        self._cursor.execute("select * from Dislike where dislikingUserID = ? and postID = ? ", (userID, postID))
+        if(self._cursor.lastrowid != None):
+            self.deleteLike(userID, postID)
+        self._cursor.execute("insert into Dislike values (?,?)", (userID,postID))
+        return True
 
     def kill(self):
         self._con.close()
+
+if __name__ == "__main__":
+    a = Database()
+    print(a.addUser("anan", "amcan"))
+    print(a.addUser("selam", "naber"))
+    print(a.addTopic("nasıl"))
+    print(a.addTopic("iyi mi"))
+    print(a.addPost(1,1,"ilk post"))
+    print(a.addLike(1,1))
+    print(a.addDislike(1,1))
