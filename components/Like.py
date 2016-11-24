@@ -1,5 +1,4 @@
 from .Component import Component
-from ..Database import Database
 
 class Like(Component):
 
@@ -8,8 +7,7 @@ class Like(Component):
 
         self.attributeTypes['userName'] = 'string'
         self.attributeTypes['postID'] = 'string'
-
-        self._DB = Database()
+        self.attributeTypes['DB'] = 'database'
 
     def __str__(self):
         return "Like"
@@ -19,7 +17,7 @@ class Like(Component):
 
     def execute(self):
 
-        result = _DB.addLike(self['userID'], self['postID'])
+        result = self['DB'].addLike(self['userID'], self['postID'])
 
         if result == True:
             return '<div>Like successful</div>'
