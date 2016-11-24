@@ -47,4 +47,9 @@ class Application(object):
         getattr(self._instances[id],methodName)(params)
 
     def execute(self):
-        pass
+        totalResult = ''
+
+        for comp in self.instances.values():
+            totalResult += comp.execute()
+
+        return '<html>' + totalResult + '</html>'
