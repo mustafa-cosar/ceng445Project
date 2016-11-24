@@ -18,7 +18,6 @@ class Register(Component):
             uName = self["username"]
             uPwd = self["password"]
             if(self._DB.addUser(uName, uPwd)):
-                print("User Added Succesfully!")
+                return "<div> User Added Succesfully! </div>"
             else:
-                print("Please Try with Different Username")
-            
+                return "<div> Please Try with Different Username </div>"
