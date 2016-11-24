@@ -1,7 +1,7 @@
 from ..Component import Component
 from ..Database import Database
 
-class Login(Component):
+class Register(Component):
         def __init__(self):
             super(Login, self).__init__()
             self.attributeTypes["username"] = "string"
@@ -17,7 +17,8 @@ class Login(Component):
         def execute(self):
             uName = self["username"]
             uPwd = self["password"]
-            if(self._DB.getUser(uName, uPwd)):
-                print("Login Succesfully!")
+            if(self._DB.addUser(uName, uPwd)):
+                print("User Added Succesfully!")
             else:
-                print("Bad Username Password Combination")
+                print("Please Try with Different Username")
+            
