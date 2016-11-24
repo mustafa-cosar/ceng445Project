@@ -18,6 +18,6 @@ class Login(Component):
             uName = self["username"]
             uPwd = self["password"]
             if(self._DB.getUser(uName, uPwd)):
-                print("Login Succesfully!")
+                return "<div> User Login Succesful </div>"
             else:
-                print("Bad Username Password Combination")
+                return "<div >Bad Username Password Combination </div>"
