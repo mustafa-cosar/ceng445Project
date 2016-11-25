@@ -50,7 +50,8 @@ class Application(object):
     def execute(self):
         totalResult = ''
 
-        for comp in self.instances.values():
-            totalResult += comp.execute()
+        for ID, comp in self._instances.items():
+            print(comp)
+            totalResult += comp[0].execute()
 
         return '<html>' + totalResult + '</html>'
