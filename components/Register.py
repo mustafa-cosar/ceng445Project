@@ -2,16 +2,16 @@ from .Component import Component
 
 class Register(Component):
         def __init__(self):
-            super(Login, self).__init__()
+            super(Register, self).__init__()
             self.attributeTypes["username"] = "string"
             self.attributeTypes["password"] = "string"
             self.attributeTypes['DB'] = 'database'
 
         def __str__(self):
-            return "User Login"
+            return "User Register"
 
         def description(self):
-            return "User Login"
+            return "User Register"
 
         def execute(self):
             uName = self["username"]
