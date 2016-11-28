@@ -3,12 +3,12 @@ from .Component import Component
 class Register(Component):
         def __init__(self):
             super(Register, self).__init__()
-            self.attributeTypes["username"] = "string"
-            self.attributeTypes["password"] = "string"
-            self.attributeTypes['DB'] = 'database'
+            self.attributeTypes["username"] = "str"
+            self.attributeTypes["password"] = "str"
+            self.attributeTypes['DB'] = 'Database'
 
         def __str__(self):
-            return "User Register"
+            return "Register"
 
         def description(self):
             return "User Register"

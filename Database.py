@@ -53,7 +53,8 @@ class Database:
                     primary key(dislikingUserID, postID) )"
         self._cursor.execute(dislikeTable)
 
-
+    def __str__(self):
+        return "Database"
 
     def getUser(self, uName, pwd):
         self._cursor.execute("select ID, password from User where userName = ?", (uName,))
