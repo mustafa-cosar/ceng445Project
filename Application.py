@@ -92,7 +92,7 @@ class Application(object):
                 totalResult += self._executeInstance(j)
             totalResult += '</div>'
 
-        return '<html> <head></head><body>' + totalResult + '</body></html>'
+        return '<!DOCTYPE HTML>\n<html> <head></head><body>' + totalResult + '</body></html>'
 
     def _executeInstance(self,  instance):
         if instance == None:
