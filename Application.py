@@ -112,8 +112,3 @@ class Application(object):
 
     def _makeGrid(self,  x, y):
         return [[None for j in range(y)] for i in range(x)]
-
-
-print('#############')
-print('Modules: ', dir(sys.modules[__name__]))
-print('#############')
