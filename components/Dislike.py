@@ -5,9 +5,9 @@ class Dislike(Component):
     def __init__(self):
         super(Dislike, self).__init__()
 
-        self.attributeTypes['userName'] = 'string'
-        self.attributeTypes['postID'] = 'string'
-        self.attributeTypes['DB'] = 'database'
+        self.attributeTypes['userName'] = 'str'
+        self.attributeTypes['postID'] = 'str'
+        self.attributeTypes['DB'] = 'Database'
 
     def __str__(self):
         return "Dislike"
