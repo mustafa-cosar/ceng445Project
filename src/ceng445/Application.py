@@ -69,7 +69,10 @@ class Application(object):
         return instanceID
 
     def instances(self):
-        return self._instances
+        retVal = {}
+        for key, val in self._instances.items():
+            retVal[key] = (str(val[0]), val[1], val[2])
+        return retVal
 
     def removeInstance(self,  id):
         del self._instances[id]

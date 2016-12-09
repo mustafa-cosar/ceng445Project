@@ -1,4 +1,4 @@
-from json import *
+import json
 from socket import *
 from sys import *
 
@@ -11,6 +11,8 @@ def usage():
 def run():
     HOST = input('Host IP: ')
     PORT = int(input('Port #: '))
+
+    usage()
 
     sock = socket(AF_INET, SOCK_STREAM)
     sock.connect((HOST, PORT))
@@ -28,7 +30,7 @@ def run():
             design['command'] = cmd
             arg = input('componentName: ')
             design['args'] = {}
-            design['args']['componentName'] = arg
+            design['args']['name'] = arg
         elif cmd == 'loadDesign':
             design['command'] = cmd
             arg = input('path: ')
