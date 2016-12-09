@@ -33,14 +33,18 @@ class Application(object):
     def load(self,  name):
         if name in self.available() and name not in self._loadedComponents.keys():
             self._loadedComponents[name] = getattr(self._componentsModule, name)
+            return True
+        return False
 
     def loadDesign(self,  path):
         design = None
         with open(path, 'r') as fp:
             design = json.load(fp)
 
+        for i in design['loaded']:
+            self.load(i)
+
         for i in design['instances']:
-            self.load(i['instanceName'])
             ID = self.addInstance(i['instanceName'], i['x'], i['y'])
             attributeTypes = dict(self.callMethod(ID, 'attributes', None))
             for attributeName, value in i['attributes'].items():
@@ -50,7 +54,7 @@ class Application(object):
                 self.callMethod(ID, '__setitem__', attributeName, attributeValue)
 
     def saveDesign(self,  path):
-        design = {'instances':[]}
+        design = {'instances':[], 'loaded': list(self._loadedComponents.keys())}
         for instance, x, y in list(self._instances.values()):
             instanceAttributes = dict([(name[0], str(instance[name[0]])) for name in list(instance.attributes())])
             instanceObj = {'instanceName': str(instance), 'x':x, 'y':y, 'attributes': instanceAttributes}
@@ -67,7 +71,7 @@ class Application(object):
     def instances(self):
         return self._instances
 
-    def removeInstance(self, id):
+    def removeInstance(self,  id):
         del self._instances[id]
 
     def callMethod(self,  id, methodName, *params):
