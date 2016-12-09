@@ -89,6 +89,7 @@ class ApplicationProcess(Process):
         else:
             result['result'] = 'Available Commands: '
             result['status'] = STATUS_OK
+        return result
 
     def _getParams(self, params):
         #TODO: Does not cover all possible cases. Improve it later

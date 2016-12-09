@@ -1,9 +1,10 @@
 from ceng445 import *
 from socket import *
+from ApplicationProcess import *
 
 def main():
     HOST = ''
-    PORT = '7777'
+    PORT = 7777
 
     sock = socket(AF_INET, SOCK_STREAM)
     sock.bind((HOST, PORT))
