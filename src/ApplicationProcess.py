@@ -13,12 +13,14 @@ class ApplicationProcess(Process):
         self._app = Application()
 
     def run(self):
-        while self._conn:
-            receivedData = self._conn.recv(65536).decode('utf-8')
-            command = json.loads(receivedData)
-            result = json.dumps(self.handle(command), indent='\t')
-            self._conn.send(result.encode('utf-8'))
-
+        try:
+            while self._conn:
+                receivedData = self._conn.recv(65536).decode('utf-8')
+                command = json.loads(receivedData)
+                result = json.dumps(self.handle(command), indent='\t')
+                self._conn.send(result.encode('utf-8'))
+        except:
+            self._conn.close()
 
     def handle(self, cmd):
         result = {}
