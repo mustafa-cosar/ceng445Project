@@ -1,6 +1,7 @@
 from multiprocessing import *
 from ceng445 import *
 import json
+import traceback
 
 STATUS_OK = 'OK'
 STATUS_FAIL = 'FAIL'
@@ -13,6 +14,7 @@ class ApplicationProcess(Process):
         self._app = Application()
 
     def run(self):
+        print("Connection established with pair: ", self._conn)
         try:
             while self._conn:
                 receivedData = self._conn.recv(65536).decode('utf-8')
@@ -20,12 +22,13 @@ class ApplicationProcess(Process):
                 result = json.dumps(self.handle(command), indent='\t')
                 self._conn.send(result.encode('utf-8'))
         except:
+            print("Connection closed! with pair: ", self._conn)
             self._conn.close()
 
     def handle(self, cmd):
         result = {}
         command = cmd.get('command', None)
-
+        print(cmd)
         if command == 'available':
             try:
                 result['result'] = self._app.available()
@@ -66,15 +69,20 @@ class ApplicationProcess(Process):
             try:
                 params = tuple(cmd['args']['params'])
                 params = None if params == () else self._getParams(params)
-                result['result'] = self._app.callMethod(cmd['args']['id'], cmd['args']['methodName'], params)
+                if params == None:
+                    result['result'] = self._app.callMethod(cmd['args']['id'], cmd['args']['methodName'], None)
+                else:
+                    result['result'] = self._app.callMethod(cmd['args']['id'], cmd['args']['methodName'], *params)
                 result['status'] = STATUS_OK
             except:
+                traceback.print_exc()
                 result['status'] = STATUS_FAIL
         elif command == 'saveDesign':
             try:
                 result['result'] = self._app.saveDesign(cmd['args']['path'])
                 result['status'] = STATUS_OK
             except:
+                traceback.print_exc()
                 result['status'] = STATUS_FAIL
         elif command == 'loadDesign':
             try:
@@ -97,7 +105,7 @@ class ApplicationProcess(Process):
         #TODO: Does not cover all possible cases. Improve it later
         retVal = []
         for i in params:
-            if type(i) == type({}) and '__factory__' in i and i['__factory__'] == True:
+            if type(i) == type({}) and i.get('__factory__', None) == True:
                 retVal.append(Factory().createInstance(i['name']))
             else:
                 retVal.append(i)
