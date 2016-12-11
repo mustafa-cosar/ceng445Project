@@ -65,23 +65,24 @@ def run():
             design['args'] = {}
             design['args']['id'] = id
             design['args']['methodName'] = methodName
-            design['params'] = []
-            print("\tIf a factory is needed, write factory as last param and press enter.")
-            print("\tFill factory info and continue params where you were left.")
+            design['args']['params'] = []
+            print("\tIf a factory is needed, write as:")
+            print("\tfactoryName,factory. Then write type.")
             params = input('params: ')
             splitted = params.split(',')
-            while splitted[-1] != 'factory':
-                design['params'] = design['params'] + splitted[:-1]
-                name = input('\t\tname: ')
+            while splitted[-1] == 'factory':
+                design['args']['params'] += splitted[:-1]
                 factoryDict = {}
                 factoryDict['__factory__'] = True
-                factoryDict['name'] = name
                 factoryDict['args'] = []
                 factoryDict['kwargs'] = {}
-                design['params'].append(factoryDict)
+                name = input("\ttype: ")
+                factoryDict['name'] = name
+                design['args']['params'].append(factoryDict)
                 params = input('params: ')
                 splitted = params.split(',')
-            design['params'] = design['params'] + splitted
+            if splitted != ['']:
+                design['args']['params'] = design['args']['params'] + splitted
         elif cmd == 'execute':
             design['command'] = cmd
             design['args'] = {}
