@@ -53,6 +53,11 @@ class Database:
                     primary key(dislikingUserID, postID) )"
         self._cursor.execute(dislikeTable)
 
+        self._commitDB()
+
+    def _commitDB(self):
+        self._con.commit()
+
     def __str__(self):
         return "Database"
 
@@ -70,6 +75,7 @@ class Database:
 
     def addUser(self, uName, pwd):
         self._cursor.execute( "insert into User (userName, password) values (?,?)", (uName,pwd) )
+        self._commitDB()
         if(self.getUser(uName, pwd)):
             return True
         else:
@@ -96,6 +102,7 @@ class Database:
         fetched = self._cursor.fetchone()
         if(fetched == None):
             self._cursor.execute("insert into Topic (topicName) Values (?) " ,(tName,))
+            self._commitDB()
             return self._cursor.lastrowid
         else:
             return None
@@ -108,6 +115,7 @@ class Database:
         uID = uID[0]
         tID = tID[0]
         self._cursor.execute("insert into Post (userID, topicID, postText, postUser, postTopic) values (?,?,?,?,?)", (user,topic, post, uID, tID))
+        self._commitDB()
         return self._cursor.lastrowid
 
     def addLike(self, userID, postID):
@@ -121,13 +129,16 @@ class Database:
         if(self._cursor.lastrowid != None):
             self.deleteDislike(userID, postID)
         self._cursor.execute("insert into Like values (?,?)", (userID,postID))
+        self._commitDB()
         return True
 
     def deleteLike(self,userID, postID):
         self._cursor.execute("delete from Like where likingUserID = ? and postID = ? ", (userID, postID))
+        self._commitDB()
 
     def deleteDislike(self,userID, postID):
         self._cursor.execute("delete from Dislike where dislikingUserID = ? and postID = ? ", (userID, postID))
+        self._commitDB()
 
 
     def addDislike(self, userID, postID):
@@ -141,6 +152,7 @@ class Database:
         if(self._cursor.lastrowid != None):
             self.deleteLike(userID, postID)
         self._cursor.execute("insert into Dislike values (?,?)", (userID,postID))
+        self._commitDB()
         return True
 
     def kill(self):
