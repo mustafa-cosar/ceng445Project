@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form action="load" method="post">
+    <strong>Available Components: </strong>
+    {% csrf_token %}
+    {{ availableComponentsForm }}
+    <input type="submit" value="Load">
+</form>
+
+
+{% endblock %}
