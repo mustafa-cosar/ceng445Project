@@ -1,16 +1,26 @@
 {% extends "base.html" %}
 {% block content %}
 
-<form action="load" method="post">
-    {% csrf_token %}
-    <strong>Available Components: </strong>
+<form action="loadComponent" method="post">
+    <strong>Available Components: </strong><br/>
+    {% for a in availableComponents%}
+        {%if a in loadedComponents%}
+            <input type="checkbox" name="{{a}}" value="{{a}}" checked disabled>
+        {%else%}
+            <input type="checkbox" name="{{a}}" value="{{a}}">
+        {%endif%}
+    {% endfor %}
+
     <input type="submit" value="Load">
 </form>
 
+<form action="addInstance" method="post">
+    <strong>Available Components: </strong><br/>
+    {% for a in loadedComponents%}
+        <input type="checkbox" name="{{a}}" value="{{a}}">
+    {% endfor %}
 
-<form action="addinstance" method="post">
-    {% csrf_token %}
+    <input type="submit" value="Load">
 </form>
-
 
 {% endblock %}
