@@ -41,6 +41,7 @@ class Application(object):
         with open(path, 'r') as fp:
             design = json.load(fp)
 
+    def _loadState(self, design):
         for i in design['loaded']:
             self.load(i)
 
@@ -54,14 +55,25 @@ class Application(object):
                 self.callMethod(ID, '__setitem__', attributeName, attributeValue)
 
     def saveDesign(self,  path):
+        design = self._dumpState()
+
+        with open(path, 'w') as fp:
+            json.dump(design, fp, indent='\t')
+
+    def _dumpState(self):
         design = {'instances':[], 'loaded': list(self._loadedComponents.keys())}
         for instance, x, y in list(self._instances.values()):
             instanceAttributes = dict([(name[0], str(instance[name[0]])) for name in list(instance.attributes())])
             instanceObj = {'instanceName': str(instance), 'x':x, 'y':y, 'attributes': instanceAttributes}
             design['instances'].append(instanceObj)
+        return design
 
-        with open(path, 'w') as fp:
-            json.dump(design, fp, indent='\t')
+    def __getstate__(self):
+        print('#####################', file=sys.stderr)
+        return (self._dumpState(), )
+
+    def __setstate__(self, state):
+        self._loadState(state[0])
 
     def addInstance(self,  componentName, x, y):
         instanceID = str(uuid.uuid4())

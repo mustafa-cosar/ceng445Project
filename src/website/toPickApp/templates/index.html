@@ -2,10 +2,14 @@
 {% block content %}
 
 <form action="load" method="post">
-    <strong>Available Components: </strong>
     {% csrf_token %}
-    {{ availableComponentsForm }}
+    <strong>Available Components: </strong>
     <input type="submit" value="Load">
+</form>
+
+
+<form action="addinstance" method="post">
+    {% csrf_token %}
 </form>
 
 
