@@ -69,7 +69,6 @@ class Application(object):
         return design
 
     def __getstate__(self):
-        print('#####################', file=sys.stderr)
         return (self._dumpState(), )
 
     def __setstate__(self, state):

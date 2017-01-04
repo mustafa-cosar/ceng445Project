@@ -70,6 +70,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'website.wsgi.application'
 
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
@@ -106,7 +107,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC+3'
+TIME_ZONE = 'Europe/Istanbul'
 
 USE_I18N = True
 

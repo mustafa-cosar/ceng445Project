@@ -1,7 +1,8 @@
 from django.conf.urls import url
 
-from . import views
+from toPickApp.views import BaseClass
 
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
+    url(r'^$', BaseClass.as_view()),
+    url(r'^load', BaseClass.as_view()),
 ]
