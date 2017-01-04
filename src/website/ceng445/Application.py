@@ -42,6 +42,9 @@ class Application(object):
             design = json.load(fp)
 
     def _loadState(self, design):
+
+        self.__init__()
+
         for i in design['loaded']:
             self.load(i)
 

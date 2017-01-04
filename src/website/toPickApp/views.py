@@ -12,7 +12,7 @@ class BaseClass(View):
     def get(self, request, *args, **kwargs):
         app = self._getApplication(request)
 
-        
+
 
         self._setApplication(request, app)
         return render(request, 'index.html', {})
@@ -29,7 +29,7 @@ class BaseClass(View):
         return app
 
     def _setApplication(self, request, app):
-        request.session['app'] = pickle.dumps(app, -1)
+        request.session['app'] = pickle.dumps(app)
 
 def index(request):
     session = request.session
