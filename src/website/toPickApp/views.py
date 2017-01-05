@@ -18,7 +18,7 @@ class BaseClass(View):
         return render(request, 'index.html', {})
 
     def post(self, request, *args, **kwargs):
-        ...
+        return render(request, 'index.html', {})
 
     def _getApplication(self, request):
         app = request.session.get('app', None)
