@@ -12,10 +12,12 @@ class BaseClass(View):
     def get(self, request, *args, **kwargs):
         app = self._getApplication(request)
 
-
+        context = self.getDeafultContext()
+        self.setAvailableComponentsToContext(context, app)
+        self.setLoadedComponentsToContext(context, app)
 
         self._setApplication(request, app)
-        return render(request, 'index.html', {})
+        return render(request, 'index.html', context)
 
     def post(self, request, *args, **kwargs):
         return render(request, 'index.html', {})
@@ -30,6 +32,20 @@ class BaseClass(View):
 
     def _setApplication(self, request, app):
         request.session['app'] = pickle.dumps(app)
+
+    def getDeafultContext(self):
+        context = {}
+
+        return context
+
+    def setAvailableComponentsToContext(self, context, app):
+        context['availableComponents'] = app.available()
+        return context
+
+    def setLoadedComponentsToContext(self, context, app):
+        loadedComponents = app.loaded()
+        context['loadedComponents'] = [(a,loadedComponents[a]) for a in loadedComponents]
+        return context
 
 def index(request):
     session = request.session
