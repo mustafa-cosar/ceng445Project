@@ -19,7 +19,13 @@ class BaseClass(View):
         return render(request, 'index.html', context)
 
     def post(self, request, *args, **kwargs):
-        return render(request, 'index.html', {})
+        app = self._getApplication(request)
+
+        context = self.getDeafultContext()
+        self.setApplicationDataToContext(context, app)
+
+        self._setApplication(request, app)
+        return render(request, 'index.html', context)
 
     def _getApplication(self, request):
         app = request.session.get('app', None)
