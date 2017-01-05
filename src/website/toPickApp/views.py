@@ -31,6 +31,8 @@ class BaseClass(View):
     def _setApplication(self, request, app):
         request.session['app'] = pickle.dumps(app)
 
+    
+
 def index(request):
     session = request.session
     app = ceng445.Application()
