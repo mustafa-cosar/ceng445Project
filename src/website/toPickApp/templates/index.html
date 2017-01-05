@@ -5,21 +5,28 @@
     {% csrf_token %}
     <strong>Available Components: </strong><br/>
     {% for a in availableComponents%}
-        {%if a in loadedComponents%}
-            <input type="checkbox" name="{{a}}" value="{{a}}" checked disabled>
-        {%else%}
-            <input type="checkbox" name="{{a}}" value="{{a}}">
-        {%endif%}
+        {% for x,y in loadedComponent %}
+            {% ifequal a x  %}
+                <input type="checkbox" name="{{a}}" value="{{a}}" checked disabled>
+            {% else %}
+                <input type="checkbox" name="{{a}}" value="{{a}}">
+            {% endifequal %}
+        {% endfor %}
+        {{a}}
+        </input>
+        </br>
     {% endfor %}
-
     <input type="submit" value="Load">
 </form>
 
 <form action="addInstance" method="post">
     {% csrf_token %}
-    <strong>Available Components: </strong><br/>
-    {% for a in loadedComponents%}
+    <strong>Loaded Components: </strong><br/>
+    {% for a,b in loadComponent%}
         <input type="checkbox" name="{{a}}" value="{{a}}">
+            {{a}} : {{b}}
+        </input>
+        </br>
     {% endfor %}
 
     <input type="submit" value="Load">
