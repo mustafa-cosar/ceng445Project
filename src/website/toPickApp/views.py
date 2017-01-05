@@ -13,8 +13,7 @@ class BaseClass(View):
         app = self._getApplication(request)
 
         context = self.getDeafultContext()
-        self.setAvailableComponentsToContext(context, app)
-        self.setLoadedComponentsToContext(context, app)
+        self.setApplicationDataToContext(context, app)
 
         self._setApplication(request, app)
         return render(request, 'index.html', context)
@@ -35,7 +34,11 @@ class BaseClass(View):
 
     def getDeafultContext(self):
         context = {}
+        return context
 
+    def setApplicationDataToContext(self, context, app):
+        self.setAvailableComponentsToContext(context, app)
+        self.setLoadedComponentsToContext(context, app)
         return context
 
     def setAvailableComponentsToContext(self, context, app):
@@ -46,6 +49,12 @@ class BaseClass(View):
         loadedComponents = app.loaded()
         context['loadedComponents'] = [(a,loadedComponents[a]) for a in loadedComponents]
         return context
+
+    def setInstancesToContext(self, context, app):
+        instances = app.instances()
+        context['instances'] = [(a, instances[a]) for a in instances]
+        return context
+
 
 def index(request):
     session = request.session
