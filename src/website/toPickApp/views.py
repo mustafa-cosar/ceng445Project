@@ -4,6 +4,7 @@ from django.views import View
 from ceng445 import *
 import pickle
 import re
+import traceback
 
 # Create your views here.
 
@@ -66,7 +67,8 @@ class BaseClass(View):
         elif self.name == 'execute':
             try:
                 result = app.execute()
-            except:
+            except Exception as e:
+                traceback.print_exc()
                 result = None
             context['executionResult'] = result
 
