@@ -48,12 +48,24 @@
         {{callMethodResult}}
 </div>
 
+<form action="saveDesign" method="post">
+    {% csrf_token %}
+    <input type="textbox" name="filePath"></input>
+    <input type="submit" value="Save Design"></input>
+</form>
+
+<form action="loadDesign" method="post">
+    {% csrf_token %}
+    <input type="textbox" name="filePath">
+    <input type="submit" value="Load Design">
+</form>
+
 <form action="execute" method="post">
     {% csrf_token %}
     <input type="submit" value="Execute">
 </form>
 <div>
-    {{executionResult}}
+    {{executionResult|safe}}
 </div>
 
 {% endblock %}
