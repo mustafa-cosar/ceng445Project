@@ -36,12 +36,17 @@
             {{instance.0}} : id: {{id}}, x: {{instance.1}}, y:{{instance.2}}
         </input>
         </br>
-        Args: <input type="textbox" name="args">
+        Method: <input type="textbox" name="methodName-{{id}}"> <br/>
+        Args: <input type="textbox" name="args-{{id}}"> <br/>
         <input type="submit" formaction="callMethod/{{id}}" value="Call Method">
         <br/>
     {% endfor %}
     <input type="submit" value="Remove Instance">
 </form>
+
+<div>
+        {{callMethodResult}}
+</div>
 
 <form action="execute" method="post">
     {% csrf_token %}

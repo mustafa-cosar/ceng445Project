@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.views import View
 from ceng445 import *
 import pickle
+import re
 
 # Create your views here.
 
@@ -13,7 +14,7 @@ class BaseClass(View):
     def get(self, request, *args, **kwargs):
         app = self._getApplication(request)
 
-        context = self.getDeafultContext()
+        context = self.getDeafultContext(request)
         self.setApplicationDataToContext(context, app)
 
         self._setApplication(request, app)
@@ -22,7 +23,7 @@ class BaseClass(View):
     def post(self, request, *args, **kwargs):
         app = self._getApplication(request)
 
-        context = self.getDeafultContext()
+        context = self.getDeafultContext(request)
 
         if self.name == 'loadComponent':
             for comp in request.POST.getlist('component', []):
@@ -39,10 +40,24 @@ class BaseClass(View):
             instanceID = request.POST.get('instance', None)
             app.removeInstance(instanceID)
         elif self.name == 'callMethod':
-            print('CALL METHOD')
+            print('CALL METHOD: ', request.POST)
+            instanceID = kwargs.get('instanceID', None)
+            methodName =  request.POST.get('methodName-'+instanceID, None)
+            try:
+                args = self.parseMethodArgs(request.POST.get('args-'+instanceID, ''))
+                if args:
+                    callMethodResult = app.callMethod(instanceID, methodName, *args)
+                else:
+                    print('Calling Method with no arguments')
+                    callMethodResult = app.callMethod(instanceID, methodName, None)
+                    print('Result: ', callMethodResult)
+            except Exception as e:
+                print('An Exception occurred: ', e)
+                callMethodResult = None
 
-            self._setApplication(request, app)
-            return redirect('/')
+            if callMethodResult:
+                print(str(callMethodResult))
+                context['callMethodResult'] = str(callMethodResult)
         elif self.name == 'execute':
             try:
                 result = app.execute()
@@ -53,6 +68,7 @@ class BaseClass(View):
 
         self.setApplicationDataToContext(context, app)
         self._setApplication(request, app)
+        self.saveContext(request, context)
         return redirect('/')
         # return render(request, 'index.html', context)
 
@@ -67,8 +83,40 @@ class BaseClass(View):
     def _setApplication(self, request, app):
         request.session['app'] = pickle.dumps(app)
 
-    def getDeafultContext(self):
-        context = {}
+    def saveContext(self, request, context):
+        request.session['context'] = context
+
+    def parseMethodArgs(self, args):
+        if args == '':
+            argv = []
+        else:
+            argv = re.split(r'\s+', args)
+        result = []
+        i = 0
+        while i < len(argv):
+            if(argv[i] == '__Factory__'):
+                result.append(Factory().createInstance(argv[i+1]))
+                i += 2
+                continue
+            else:
+                try:
+                    result.append(int(argv[i]))
+                except:
+                    result.append(argv[i])
+            i += 1
+        print('---------------PARSED ARGS -------------')
+        print(argv)
+        if argv:
+            return tuple(argv)
+        else:
+            return None
+
+    def getDeafultContext(self, request):
+        if request.session.get('context', None):
+            context = request.session['context']
+            del request.session['context']
+        else:
+            context = {}
         return context
 
     def setApplicationDataToContext(self, context, app):
