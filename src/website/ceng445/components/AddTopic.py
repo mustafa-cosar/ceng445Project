@@ -3,13 +3,13 @@ from .Component import Component
 class AddTopic(Component):
 
     def __init__(self):
-        super(Dislike, self).__init__()
+        super(AddTopic, self).__init__()
 
         self.attributeTypes['topicName'] = 'str'
         self.attributeTypes['DB'] = 'Database'
 
     def __str__(self):
-        return "Add Topic Component"
+        return "AddTopic"
 
     def description(self):
         return "Users are able to add topics by giving its name."
