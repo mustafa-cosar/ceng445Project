@@ -50,6 +50,10 @@ class Application(object):
 
         for i in design['instances']:
             ID = self.addInstance(i['instanceName'], i['x'], i['y'])
+            instance = self._instances[ID]
+            del self._instances[ID]
+            self._instances[i.get('instanceID', ID)] = instance
+            ID = i.get('instanceID', ID)
             attributeTypes = dict(self.callMethod(ID, 'attributes', None))
             for attributeName, value in i['attributes'].items():
                 attributeType = attributeTypes[attributeName]
@@ -65,9 +69,9 @@ class Application(object):
 
     def _dumpState(self):
         design = {'instances':[], 'loaded': list(self._loadedComponents.keys())}
-        for instance, x, y in list(self._instances.values()):
+        for instanceID, (instance, x, y) in list(self._instances.items()):
             instanceAttributes = dict([(name[0], str(instance[name[0]])) for name in list(instance.attributes())])
-            instanceObj = {'instanceName': str(instance), 'x':x, 'y':y, 'attributes': instanceAttributes}
+            instanceObj = {'instanceID': instanceID,'instanceName': str(instance), 'x':x, 'y':y, 'attributes': instanceAttributes}
             design['instances'].append(instanceObj)
         return design
 
@@ -89,7 +93,8 @@ class Application(object):
         return retVal
 
     def removeInstance(self,  id):
-        del self._instances[id]
+        if self._instances.get(id, False):
+            del self._instances[id]
 
     def callMethod(self,  id, methodName, *params):
         if params == (None,):

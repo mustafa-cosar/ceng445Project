@@ -19,7 +19,7 @@ class Component(object):
         return attributeList
 
     def __getitem__(self, key):
-        return self.items[key]
+        return self.items.get(key, None)
 
     def __setitem__(self, key, value):
         self.items[key] = value
