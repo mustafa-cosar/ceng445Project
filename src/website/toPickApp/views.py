@@ -27,10 +27,34 @@ class BaseClass(View):
         if self.name == 'loadComponent':
             for comp in request.POST.getlist('component', []):
                 app.load(comp)
+        elif self.name == 'addInstance':
+            try:
+                comp = request.POST.get('component', None)
+                if comp:
+                    app.addInstance(comp, int(request.POST['x']), int(request.POST['y']))
+            except ValueError:
+                #TODO Do something here
+                ...
+        elif self.name == 'removeInstance':
+            instanceID = request.POST.get('instance', None)
+            app.removeInstance(instanceID)
+        elif self.name == 'callMethod':
+            print('CALL METHOD')
+
+            self._setApplication(request, app)
+            return redirect('/')
+        elif self.name == 'execute':
+            try:
+                result = app.execute()
+            except:
+                result = None
+            context['executionResult'] = result
+
 
         self.setApplicationDataToContext(context, app)
         self._setApplication(request, app)
-        return render(request, 'index.html', context)
+        return redirect('/')
+        # return render(request, 'index.html', context)
 
     def _getApplication(self, request):
         app = request.session.get('app', None)
@@ -50,6 +74,7 @@ class BaseClass(View):
     def setApplicationDataToContext(self, context, app):
         self.setAvailableComponentsToContext(context, app)
         self.setLoadedComponentsToContext(context, app)
+        self.setInstancesToContext(context, app)
         return context
 
     def setAvailableComponentsToContext(self, context, app):

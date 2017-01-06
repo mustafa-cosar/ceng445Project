@@ -17,11 +17,13 @@
     {% csrf_token %}
     <strong>Loaded Components: </strong><br/>
     {% for a,b in loadedComponents %}
-        <input type="checkbox" name="component" value="{{a}}">
+        <input type="radio" name="component" value="{{a}}">
             {{a}} : {{b}}
         </input>
         </br>
     {% endfor %}
+    x: <input type="textbox" name="x"> <br/>
+    y: <input type="textbox" name="y"> <br/>
 
     <input type="submit" value="Add Instance">
 </form>
@@ -29,14 +31,24 @@
 <form action="removeInstance" method="post">
     {% csrf_token %}
     <strong>Instances: </strong><br/>
-    {% for id,(name,x,y) in loadComponent%}
-        <input type="checkbox" name="instance" value="{{id}}">
-            {{name}} : id: {{id}}, x: {{x}}, y:{{y}}
+    {% for id, instance in instances %}
+        <input type="radio" name="instance" value="{{id}}">
+            {{instance.0}} : id: {{id}}, x: {{instance.1}}, y:{{instance.2}}
         </input>
         </br>
+        Args: <input type="textbox" name="args">
+        <input type="submit" formaction="callMethod/{{id}}" value="Call Method">
+        <br/>
     {% endfor %}
-
     <input type="submit" value="Remove Instance">
 </form>
+
+<form action="execute" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Execute">
+</form>
+<div>
+    {{executionResult}}
+</div>
 
 {% endblock %}
