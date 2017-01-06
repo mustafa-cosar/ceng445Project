@@ -155,6 +155,20 @@ class Database:
         self._commitDB()
         return True
 
+    def getPosts(self, topicName):
+        self._cursor.execute("select ID from Topic where topicName = ?", (topicName,))
+        if(self._cursor == None):
+            return False
+        topicID = self._cursor.fetchone()[0]
+        self._cursor.execute("select postText from Post where topicID = ?", (topicID,))
+        if(self._cursor == None):
+            return False
+        rows = self._cursor.fetchall()
+        ret = []
+        for row in rows:
+            ret.append(row)
+        return ret
+
     def kill(self):
         self._con.close()
 
@@ -162,8 +176,7 @@ if __name__ == "__main__":
     a = Database()
     print(a.addUser("anan", "amcan"))
     print(a.addUser("selam", "naber"))
-    print(a.addTopic("nasıl"))
     print(a.addTopic("iyi mi"))
     print(a.addPost(1,1,"ilk post"))
-    print(a.addLike(1,1))
-    print(a.addDislike(1,1))
+    print(a.addPost(1,1,"ikinci post"))
+    print(a.getPosts("iyi mi") )
