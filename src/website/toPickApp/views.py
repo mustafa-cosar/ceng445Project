@@ -58,6 +58,11 @@ class BaseClass(View):
             if callMethodResult:
                 print(str(callMethodResult))
                 context['callMethodResult'] = str(callMethodResult)
+        elif self.name == 'saveDesign':
+            app.saveDesign(request.POST.get('filePath', None))
+        elif self.name == 'loadDesign':
+            print('LOAD DESIGN _______________')
+            app.loadDesign(request.POST.get('filePath', None))
         elif self.name == 'execute':
             try:
                 result = app.execute()

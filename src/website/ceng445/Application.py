@@ -38,8 +38,11 @@ class Application(object):
 
     def loadDesign(self,  path):
         design = None
-        with open(path, 'r') as fp:
-            design = json.load(fp)
+        if path:
+            with open(path, 'r') as fp:
+                design = json.load(fp)
+        if design:
+            self._loadState(design)
 
     def _loadState(self, design):
 
@@ -64,8 +67,9 @@ class Application(object):
     def saveDesign(self,  path):
         design = self._dumpState()
 
-        with open(path, 'w') as fp:
-            json.dump(design, fp, indent='\t')
+        if path:
+            with open(path, 'w') as fp:
+                json.dump(design, fp, indent='\t')
 
     def _dumpState(self):
         design = {'instances':[], 'loaded': list(self._loadedComponents.keys())}

@@ -10,4 +10,6 @@ urlpatterns = [
     url(r'^removeInstance$', BaseClass.as_view(name='removeInstance')),
     url(r'^execute$', BaseClass.as_view(name='execute')),
     url(r'^callMethod/(?P<instanceID>\S*)$', BaseClass.as_view(name='callMethod')),
+    url(r'^saveDesign$', BaseClass.as_view(name='saveDesign')),
+    url(r'^loadDesign$', BaseClass.as_view(name='loadDesign')),
 ]
