@@ -5,7 +5,7 @@
     {% csrf_token %}
     <strong>Available Components: </strong><br/>
     {% for a in availableComponents%}
-        <input type="checkbox" name="{{a}}" value="{{a}}">
+        <input type="checkbox" name="component" value="{{a}}">
             {{a}}
         </input>
         </br>
@@ -16,8 +16,8 @@
 <form action="addInstance" method="post">
     {% csrf_token %}
     <strong>Loaded Components: </strong><br/>
-    {% for a,b in loadComponent%}
-        <input type="checkbox" name="{{a}}" value="{{a}}">
+    {% for a,b in loadedComponents %}
+        <input type="checkbox" name="component" value="{{a}}">
             {{a}} : {{b}}
         </input>
         </br>
@@ -30,7 +30,7 @@
     {% csrf_token %}
     <strong>Instances: </strong><br/>
     {% for id,(name,x,y) in loadComponent%}
-        <input type="checkbox" name="{{id}}" value="{{id}}">
+        <input type="checkbox" name="instance" value="{{id}}">
             {{name}} : id: {{id}}, x: {{x}}, y:{{y}}
         </input>
         </br>

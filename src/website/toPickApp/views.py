@@ -8,6 +8,7 @@ import pickle
 
 
 class BaseClass(View):
+    name = ''
 
     def get(self, request, *args, **kwargs):
         app = self._getApplication(request)
@@ -22,8 +23,12 @@ class BaseClass(View):
         app = self._getApplication(request)
 
         context = self.getDeafultContext()
-        self.setApplicationDataToContext(context, app)
 
+        if self.name == 'loadComponent':
+            for comp in request.POST.getlist('component', []):
+                app.load(comp)
+
+        self.setApplicationDataToContext(context, app)
         self._setApplication(request, app)
         return render(request, 'index.html', context)
 
