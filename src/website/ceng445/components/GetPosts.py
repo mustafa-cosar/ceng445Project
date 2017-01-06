@@ -3,14 +3,22 @@ from .Component import Component
 class GetPosts(Component):
     def __init__(self):
         super(GetPosts, self).__init__()
-
+        self.attributeTypes['topicName'] = 'str'
+        self.attributeTypes['DB'] = 'Database'
 
     def __str__(self):
         return 'GetPosts'
 
     def description(self):
-        return 'Bring the Posts that are related with the Topics the User is following'
+        return 'Bring the Posts that are expected by user with topic name.'
 
     def execute(self):
-        #TODO Implement GetPosts
-        return ''
+
+        result = self['DB'].addLike(self['topicName'])
+
+        if(result == False):
+            return '<div> No Post Found from this Topic </div>'
+        else:
+            retDiv = ''
+            for res in result:
+                retDiv = retDiv + '<div>' + res[0] + '</div>'
