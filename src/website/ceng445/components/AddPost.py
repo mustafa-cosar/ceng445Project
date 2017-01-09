@@ -19,8 +19,7 @@ class AddPost(Component):
     def execute(self):
 
         result = self['DB'].addPost(self['userName'], self['topicName'], self['postText'])
-
-        if result == True:
+        if result != None:
             return '<div>Add post is successful</div>'
         else:
             return '<div>Add post is unsuccessful</div>'

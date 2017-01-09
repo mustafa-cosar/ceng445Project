@@ -63,18 +63,24 @@ class Database:
 
     def getUser(self, uName, pwd):
         self._cursor.execute("select ID, password from User where userName = ?", (uName,))
-        ID, password = self._cursor.fetchone()
+        if(self._cursor == None):
+            return None
+
+        ID, password = self._cursor.fetchall()[0]
+
         if(password == pwd):
             return ID
         else:
             return None
 
-    def _getUser(self, uID):
-        self._cursor.execute("select userName from User where ID = ?", (uID,))
-        return self._cursor.fetchone()
+    def _getUser(self, uName):
+
+        self._cursor.execute("select ID from User where userName = ?", (uName,))
+        return self._cursor.fetchall()[0][0]
 
     def addUser(self, uName, pwd):
-        self._cursor.execute( "insert into User (userName, password) values (?,?)", (uName,pwd) )
+
+        self._cursor.execute( "insert or ignore into User (userName, password) values (?,?) ", (uName,pwd) )
         self._commitDB()
         if(self.getUser(uName, pwd)):
             return True
@@ -91,7 +97,7 @@ class Database:
 
     def getTopic(self, tName):
         self._cursor.execute("select ID from Topic where topicName = ?", (tName,))
-        result = self._cursor.fetchone()
+        result = self._cursor.fetchall()[0]
         if(result != None):
             return result[0]
         else:
@@ -99,8 +105,8 @@ class Database:
 
     def addTopic(self, tName):
         self._cursor.execute("select ID from Topic where topicName = ?", (tName,))
-        fetched = self._cursor.fetchone()
-        if(fetched == None):
+        fetched = self._cursor.fetchall()
+        if(fetched == []):
             self._cursor.execute("insert into Topic (topicName) Values (?) " ,(tName,))
             self._commitDB()
             return self._cursor.lastrowid
@@ -109,20 +115,23 @@ class Database:
 
     def addPost(self, user, topic, post):
         uID = self._getUser(user)
-        tID = self._getTopic(topic)
+        tID = self.getTopic(topic)
         if(uID == None or tID == None):
             return None
-        uID = uID[0]
-        tID = tID[0]
-        self._cursor.execute("insert into Post (userID, topicID, postText, postUser, postTopic) values (?,?,?,?,?)", (user,topic, post, uID, tID))
+        uID = uID
+        tID = tID
+        self._cursor.execute("insert into Post (userID, topicID, postText, postUser, postTopic) values (?,?,?,?,?)", (uID, tID, post, user,topic))
         self._commitDB()
         return self._cursor.lastrowid
 
-    def addLike(self, userID, postID):
-        self._cursor.execute("select * from User where ID = ?", (userID,))
+    def addLike(self, userName, postID):
+        self._cursor.execute("select ID from User where userName = ?", (userName,))
+        print('username: ')
+        print(userName)
         if(self._cursor == None):
             return False
-        self._cursor.execute("select * from Post where ID = ?", (userID,))
+        userID = self._cursor.fetchall()[0][0]
+        self._cursor.execute("select * from Post where ID = ?", (postID,))
         if(self._cursor == None):
             return False
         self._cursor.execute("select * from Dislike where dislikingUserID = ? and postID = ? ", (userID, postID))
@@ -141,10 +150,11 @@ class Database:
         self._commitDB()
 
 
-    def addDislike(self, userID, postID):
-        self._cursor.execute("select * from User where ID = ?", (userID,))
+    def addDislike(self, userName, postID):
+        self._cursor.execute("select ID from User where userName = ?", (userName,))
         if(self._cursor == None):
             return False
+        userID = self._cursor.fetchall()[0][0]
         self._cursor.execute("select * from Post where ID = ?", (userID,))
         if(self._cursor == None):
             return False
@@ -156,10 +166,9 @@ class Database:
         return True
 
     def getPosts(self, topicName):
-        self._cursor.execute("select ID from Topic where topicName = ?", (topicName,))
-        if(self._cursor == None):
+        topicID = self.getTopic(topicName)
+        if(topicID == None):
             return False
-        topicID = self._cursor.fetchone()[0]
         self._cursor.execute("select postText from Post where topicID = ?", (topicID,))
         if(self._cursor == None):
             return False
@@ -167,16 +176,8 @@ class Database:
         ret = []
         for row in rows:
             ret.append(row)
+            print(row)
         return ret
 
     def kill(self):
         self._con.close()
-
-if __name__ == "__main__":
-    a = Database()
-    print(a.addUser("anan", "amcan"))
-    print(a.addUser("selam", "naber"))
-    print(a.addTopic("iyi mi"))
-    print(a.addPost(1,1,"ilk post"))
-    print(a.addPost(1,1,"ikinci post"))
-    print(a.getPosts("iyi mi") )

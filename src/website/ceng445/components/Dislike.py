@@ -17,7 +17,7 @@ class Dislike(Component):
 
     def execute(self):
 
-        result = self['DB'].addDislike(self['userID'], self['postID'])
+        result = self['DB'].addDislike(self['userName'], self['postID'])
 
         if result == True:
             return '<div>Dislike successful</div>'

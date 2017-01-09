@@ -18,7 +18,7 @@ class AddTopic(Component):
 
         result = self['DB'].addTopic(self['topicName'])
 
-        if result == True:
+        if result != None:
             return '<div>Add topic is successful</div>'
         else:
             return '<div>Add topic is unsuccessful</div>'

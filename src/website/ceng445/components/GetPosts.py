@@ -14,7 +14,7 @@ class GetPosts(Component):
 
     def execute(self):
 
-        result = self['DB'].addLike(self['topicName'])
+        result = self['DB'].getPosts(self['topicName'])
 
         if(result == False):
             return '<div> No Post Found from this Topic </div>'
@@ -22,3 +22,4 @@ class GetPosts(Component):
             retDiv = ''
             for res in result:
                 retDiv = retDiv + '<div>' + res[0] + '</div>'
+            return retDiv
