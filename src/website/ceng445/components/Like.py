@@ -17,7 +17,7 @@ class Like(Component):
 
     def execute(self):
 
-        result = self['DB'].addLike(self['userID'], self['postID'])
+        result = self['DB'].addLike(self['userName'], self['postID'])
 
         if result == True:
             return '<div>Like successful</div>'
