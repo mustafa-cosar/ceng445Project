@@ -87,7 +87,9 @@ class Application(object):
 
     def addInstance(self,  componentName, x, y):
         instanceID = str(uuid.uuid4())
-        self._instances[instanceID] = (self._loadedComponents[componentName](), x, y)
+        instance = self._loadedComponents[componentName]()
+        instance['DB'] = Factory.Factory().createInstance('Database')
+        self._instances[instanceID] = (instance, x, y)
         return instanceID
 
     def instances(self):
@@ -142,3 +144,14 @@ class Application(object):
 
     def _makeGrid(self,  x, y):
         return [[None for j in range(y)] for i in range(x)]
+
+
+    def makeGridHTML(self):
+        x, y = self._findMaxGridXY()
+        grid = self._makeGrid(x+1, y+1)
+
+        for ID, comp in self._instances.items():
+            ins, x, y = comp
+            grid[x][y] = ins.createHTML(ID)
+
+        return grid

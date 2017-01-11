@@ -13,6 +13,16 @@ class Register(Component):
         def description(self):
             return "User Register"
 
+        def createHTML(self, instanceID):
+            print('-------------CREATE HTML')
+            return '''
+            <div>
+                <form action="/component-{}" method="post">
+                <input type="textbox" name="username"></input>
+                <input type="submit">
+                </form>
+            </div>'''.format(instanceID)
+
         def execute(self):
             uName = self["username"]
             uPwd = self["password"]
