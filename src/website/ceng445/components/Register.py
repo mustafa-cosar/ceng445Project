@@ -13,7 +13,7 @@ class Register(Component):
         def description(self):
             return "User Register"
 
-        def createHTML(self, instanceID):
+        def createHTML(self, request, instanceID):
             print('-------------CREATE HTML')
             return '''
             <div>

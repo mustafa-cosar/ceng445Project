@@ -146,12 +146,12 @@ class Application(object):
         return [[None for j in range(y)] for i in range(x)]
 
 
-    def makeGridHTML(self):
+    def makeGridHTML(self, request):
         x, y = self._findMaxGridXY()
         grid = self._makeGrid(x+1, y+1)
 
         for ID, comp in self._instances.items():
             ins, x, y = comp
-            grid[x][y] = ins.createHTML(ID)
+            grid[x][y] = ins.createHTML(request, ID)
 
         return grid
