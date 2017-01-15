@@ -32,6 +32,28 @@ class Database:
         except IntegrityError:
             return False
 
+
+    def addTopic(self, topicName):
+        topic = Topic()
+        topic.name = topicName
+        try:
+            topic.save()
+            return True
+        except IntegrityError:
+            return False
+
+    def addPost(self, user, topic, postText):
+        post = Post()
+        post.user = user
+        post.topic = topic
+        post.post_text = postText
+
+        try:
+            post.save()
+            return True
+        except IntegrityError:
+            return False
+            
     def getPosts(self, topicName):
         try:
             rTopic = Topic.objects.get(name = topicName)
@@ -61,22 +83,6 @@ class Database:
         post.disliking_user.add(cUser)
         post.save()
         return True
-
-    def addDislike(self, userName, postID):     # Done!
-        self._cursor.execute("select ID from User where userName = ?", (userName,))
-        if(self._cursor == None):
-            return False
-        userID = self._cursor.fetchall()[0][0]
-        self._cursor.execute("select * from Post where ID = ?", (userID,))
-        if(self._cursor == None):
-            return False
-        self._cursor.execute("select * from Dislike where dislikingUserID = ? and postID = ? ", (userID, postID))
-        if(self._cursor.lastrowid != None):
-            self.deleteLike(userID, postID)
-        self._cursor.execute("insert into Dislike values (?,?)", (userID,postID))
-        self._commitDB()
-        return True
-
 
 
 @Singleton

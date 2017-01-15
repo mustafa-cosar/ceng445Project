@@ -16,7 +16,7 @@ class BaseClass(View):
         app = self._getApplication(request)
 
         context = self.getDeafultContext(request)
-        self.setApplicationDataToContext(context, app)
+        self.setApplicationDataToContext(context, app, request)
 
         self._setApplication(request, app)
         return render(request, 'index.html', context)
@@ -73,7 +73,7 @@ class BaseClass(View):
             context['executionResult'] = result
 
 
-        self.setApplicationDataToContext(context, app)
+        self.setApplicationDataToContext(context, app, request)
         self._setApplication(request, app)
         self.saveContext(request, context)
         return redirect('/')
@@ -126,11 +126,11 @@ class BaseClass(View):
             context = {}
         return context
 
-    def setApplicationDataToContext(self, context, app):
+    def setApplicationDataToContext(self, context, app, request):
         self.setAvailableComponentsToContext(context, app)
         self.setLoadedComponentsToContext(context, app)
         self.setInstancesToContext(context, app)
-        self.setGridToContext(context, app)
+        self.setGridToContext(context, app, request)
         return context
 
     def setAvailableComponentsToContext(self, context, app):
@@ -147,8 +147,8 @@ class BaseClass(View):
         context['instances'] = [(a, instances[a]) for a in instances]
         return context
 
-    def setGridToContext(self, context, app):
-        grid = app.makeGridHTML()
+    def setGridToContext(self, context, app, request):
+        grid = app.makeGridHTML(request)
         print(grid)
         context['grid'] = grid
         return context
