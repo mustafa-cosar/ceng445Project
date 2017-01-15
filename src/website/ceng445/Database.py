@@ -32,6 +32,51 @@ class Database:
         except IntegrityError:
             return False
 
+    def getPosts(self, topicName):
+        try:
+            rTopic = Topic.objects.get(name = topicName)
+            posts = Post.objects.get(topic = rTopic)
+            return posts
+        except Topic.DoesNotExist:
+            return []
+        except Post.DoesNotExist:
+            return []
+
+    def addLike(self, user, post):
+        try:
+            post.disliking_user.objects.filter(user = user).delete()
+        except:
+            ...
+
+        post.liking_user.add(cUser)
+        post.save()
+        return True
+
+    def addDislike(self, user, post):
+        try:
+            post.liking_user.objects.filter(user = user).delete()
+        except:
+            ...
+
+        post.disliking_user.add(cUser)
+        post.save()
+        return True
+
+    def addDislike(self, userName, postID):     # Done!
+        self._cursor.execute("select ID from User where userName = ?", (userName,))
+        if(self._cursor == None):
+            return False
+        userID = self._cursor.fetchall()[0][0]
+        self._cursor.execute("select * from Post where ID = ?", (userID,))
+        if(self._cursor == None):
+            return False
+        self._cursor.execute("select * from Dislike where dislikingUserID = ? and postID = ? ", (userID, postID))
+        if(self._cursor.lastrowid != None):
+            self.deleteLike(userID, postID)
+        self._cursor.execute("insert into Dislike values (?,?)", (userID,postID))
+        self._commitDB()
+        return True
+
 
 
 @Singleton
@@ -129,7 +174,7 @@ class DatabaseOld:
         else:
             return None
 
-    def addTopic(self, tName):
+    def addTopic(self, tName):      # Done!
         self._cursor.execute("select ID from Topic where topicName = ?", (tName,))
         fetched = self._cursor.fetchall()
         if(fetched == []):
@@ -139,7 +184,7 @@ class DatabaseOld:
         else:
             return None
 
-    def addPost(self, user, topic, post):
+    def addPost(self, user, topic, post):       # Done!
         uID = self._getUser(user)
         tID = self.getTopic(topic)
         if(uID == None or tID == None):
@@ -150,7 +195,7 @@ class DatabaseOld:
         self._commitDB()
         return self._cursor.lastrowid
 
-    def addLike(self, userName, postID):
+    def addLike(self, userName, postID):        # Done!
         self._cursor.execute("select ID from User where userName = ?", (userName,))
         print('username: ')
         print(userName)
@@ -176,7 +221,7 @@ class DatabaseOld:
         self._commitDB()
 
 
-    def addDislike(self, userName, postID):
+    def addDislike(self, userName, postID):     # Done!
         self._cursor.execute("select ID from User where userName = ?", (userName,))
         if(self._cursor == None):
             return False
@@ -191,7 +236,7 @@ class DatabaseOld:
         self._commitDB()
         return True
 
-    def getPosts(self, topicName):
+    def getPosts(self, topicName):      # Done!
         topicID = self.getTopic(topicName)
         if(topicID == None):
             return False
