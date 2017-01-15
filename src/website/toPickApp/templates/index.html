@@ -68,4 +68,14 @@
     {{executionResult|safe}}
 </div>
 
+<table>
+    {% for row in grid %}
+    <tr>
+        {% for col in row %}
+        <td>{{col|safe}}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+
 {% endblock %}

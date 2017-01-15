@@ -1,4 +1,10 @@
+import os
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "website.settings")
+
 import sqlite3
+from toPickApp.models import *
+from django.contrib.auth.models import User
+from django.db.utils import IntegrityError
 
 def Singleton(cls):
     _instances = {}
@@ -10,6 +16,26 @@ def Singleton(cls):
 
 @Singleton
 class Database:
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def addUser(self, username, password, email, first_name, last_name):
+        user = User()
+        user.username = username
+        user.password = password
+        user.email = email
+        user.first_name = first_name
+        user.last_name = last_name
+        try:
+            user.save()
+            return True
+        except IntegrityError:
+            return False
+
+
+
+@Singleton
+class DatabaseOld:
     def __init__(self):
         self._con = sqlite3.connect('ceng445.db')
         self._cursor = self._con.cursor()

@@ -130,6 +130,7 @@ class BaseClass(View):
         self.setAvailableComponentsToContext(context, app)
         self.setLoadedComponentsToContext(context, app)
         self.setInstancesToContext(context, app)
+        self.setGridToContext(context, app)
         return context
 
     def setAvailableComponentsToContext(self, context, app):
@@ -144,6 +145,12 @@ class BaseClass(View):
     def setInstancesToContext(self, context, app):
         instances = app.instances()
         context['instances'] = [(a, instances[a]) for a in instances]
+        return context
+
+    def setGridToContext(self, context, app):
+        grid = app.makeGridHTML()
+        print(grid)
+        context['grid'] = grid
         return context
 
 
