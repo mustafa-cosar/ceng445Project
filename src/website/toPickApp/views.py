@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views import View
+from toPickApp.forms import *
+from django.contrib.auth.models import User
 from ceng445 import *
 import pickle
 import re
@@ -40,6 +42,11 @@ class BaseClass(View):
         elif self.name == 'removeInstance':
             instanceID = request.POST.get('instance', None)
             app.removeInstance(instanceID)
+            # else:
+            #     try:
+            #         result.append(int(argv[i]))
+            #     except:
+            #         reeInstance(instanceID)
         elif self.name == 'callMethod':
             print('CALL METHOD: ', request.POST)
             instanceID = kwargs.get('instanceID', None)
@@ -153,6 +160,27 @@ class BaseClass(View):
         context['grid'] = grid
         return context
 
+def home(request):
+    context = {}
+    context['userregister'] = UserRegister(request.POST, prefix='user')
+    context['userlogin'] = UserLogin(request.POST, prefix='login')
+    return render(request, 'register.html',context)
+
+def register(request):
+    if request.method == 'POST':
+        form = UserRegister(request.POST)
+        if form.is_valid() == False:
+            print('Not Valid!')
+            return redirect('/')
+        try:
+            username=form.clean_username()
+            email = form.clean_email()
+            password=form.cleaned_data['password']
+        except ValidationError as e:
+            redirect('/')
+        user = User(username=username, email=email, password=password)
+        user.save()
+    return redirect('home')
 
 def index(request):
     session = request.session

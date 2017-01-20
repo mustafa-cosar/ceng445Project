@@ -1,6 +1,3 @@
-{% extends "base.html" %}
-{% block content %}
-
 <form action="loadComponent" method="post">
     {% csrf_token %}
     <strong>Available Components: </strong><br/>
@@ -77,5 +74,3 @@
     </tr>
     {% endfor %}
 </table>
-
-{% endblock %}
