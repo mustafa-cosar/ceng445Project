@@ -57,7 +57,7 @@ class BaseClass(View):
                     callMethodResult = app.callMethod(instanceID, methodName, *args)
                 else:
                     print('Calling Method with no arguments')
-                    callMethodResult = app.callMethod(instanceID, methodName, None)
+                    callMethodResult = redirectapp.callMethod(instanceID, methodName, None)
                     print('Result: ', callMethodResult)
             except Exception as e:
                 print('An Exception occurred: ', e)
@@ -78,7 +78,11 @@ class BaseClass(View):
                 traceback.print_exc()
                 result = None
             context['executionResult'] = result
-
+        elif self.name == 'main':
+            self.setApplicationDataToContext(context, app, request)
+            self._setApplication(request, app)
+            self.saveContext(request, context)
+            return redirect('/')
 
         self.setApplicationDataToContext(context, app, request)
         self._setApplication(request, app)
@@ -162,25 +166,43 @@ class BaseClass(View):
 
 def home(request):
     context = {}
-    context['userregister'] = UserRegister(request.POST, prefix='user')
-    context['userlogin'] = UserLogin(request.POST, prefix='login')
+    context['userregister'] = UserRegister(request.POST)
+    context['userlogin'] = UserLogin(request.POST)
     return render(request, 'register.html',context)
 
 def register(request):
-    if request.method == 'POST':
-        form = UserRegister(request.POST)
-        if form.is_valid() == False:
-            print('Not Valid!')
-            return redirect('/')
-        try:
-            username=form.clean_username()
-            email = form.clean_email()
-            password=form.cleaned_data['password']
-        except ValidationError as e:
-            redirect('/')
-        user = User(username=username, email=email, password=password)
-        user.save()
-    return redirect('home')
+    if request.method=='POST':
+        form=UserRegister(request.POST)
+        for field in form:
+            print(field.label)
+            print(field.errors)
+        if form.is_valid():
+            print('form valid')
+            username, email, password = form.cleaned_data['username'], form.cleaned_data['email'], form.cleaned_data['password1']
+            user = User.objects.create_user(username, email, password)
+            user.is_active = True # if you want to set active
+            user.save()
+            return redirect('/home')
+    else:
+        ...
+    print('register unsuccesfull')
+    return redirect('/')
+
+def login(request):
+    if request.method=='POST':
+        form=UserLogin(request.POST)
+        for field in form:
+            print(field.label)
+            print(field.errors)
+        if form.is_valid():
+            username, password = form.cleaned_data['username'], form.cleaned_data['password']
+            user = User.objects.get(username=username)
+            user.is_active = True # if you want to set active
+            return redirect('/home')
+    else:
+        ...
+    print('login unsuccesfull')
+    return redirect('/')
 
 def index(request):
     session = request.session
@@ -189,7 +211,6 @@ def index(request):
     context = getContext(request, app)
 
     return render(request, 'index.html', context)
-
 
 def loadComponent(request):
     ...

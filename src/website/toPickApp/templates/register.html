@@ -11,6 +11,9 @@
     .errorlist {
         display: none;
     }
+    .helptext {
+        display: none;
+    }
     .inputForms {
         margin-right: 25px;
     }
@@ -23,7 +26,7 @@
             <form method="POST" action="register">
                 {% csrf_token %}
                 <table>
-                    {{userregister.as_table}}
+                    {{userregister}}
                 </table>
                 <input type="submit">
             </form>
@@ -36,7 +39,7 @@
             <form method="POST" action="login">
                 {% csrf_token %}
                 <table>
-                    {{userlogin.as_table}}
+                    {{userlogin}}
                 </table>
                 <input type="submit">
             </form>
