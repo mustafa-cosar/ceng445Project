@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views import View
+from toPickApp.forms import *
+from django.contrib.auth.models import User
 from ceng445 import *
 import pickle
 import re
@@ -40,6 +42,11 @@ class BaseClass(View):
         elif self.name == 'removeInstance':
             instanceID = request.POST.get('instance', None)
             app.removeInstance(instanceID)
+            # else:
+            #     try:
+            #         result.append(int(argv[i]))
+            #     except:
+            #         reeInstance(instanceID)
         elif self.name == 'callMethod':
             print('CALL METHOD: ', request.POST)
             instanceID = kwargs.get('instanceID', None)
@@ -50,7 +57,7 @@ class BaseClass(View):
                     callMethodResult = app.callMethod(instanceID, methodName, *args)
                 else:
                     print('Calling Method with no arguments')
-                    callMethodResult = app.callMethod(instanceID, methodName, None)
+                    callMethodResult = redirectapp.callMethod(instanceID, methodName, None)
                     print('Result: ', callMethodResult)
             except Exception as e:
                 print('An Exception occurred: ', e)
@@ -71,7 +78,11 @@ class BaseClass(View):
                 traceback.print_exc()
                 result = None
             context['executionResult'] = result
-
+        elif self.name == 'main':
+            self.setApplicationDataToContext(context, app, request)
+            self._setApplication(request, app)
+            self.saveContext(request, context)
+            return redirect('/')
 
         self.setApplicationDataToContext(context, app, request)
         self._setApplication(request, app)
@@ -153,6 +164,45 @@ class BaseClass(View):
         context['grid'] = grid
         return context
 
+def home(request):
+    context = {}
+    context['userregister'] = UserRegister(request.POST)
+    context['userlogin'] = UserLogin(request.POST)
+    return render(request, 'register.html',context)
+
+def register(request):
+    if request.method=='POST':
+        form=UserRegister(request.POST)
+        for field in form:
+            print(field.label)
+            print(field.errors)
+        if form.is_valid():
+            print('form valid')
+            username, email, password = form.cleaned_data['username'], form.cleaned_data['email'], form.cleaned_data['password1']
+            user = User.objects.create_user(username, email, password)
+            user.is_active = True # if you want to set active
+            user.save()
+            return redirect('/home')
+    else:
+        ...
+    print('register unsuccesfull')
+    return redirect('/')
+
+def login(request):
+    if request.method=='POST':
+        form=UserLogin(request.POST)
+        for field in form:
+            print(field.label)
+            print(field.errors)
+        if form.is_valid():
+            username, password = form.cleaned_data['username'], form.cleaned_data['password']
+            user = User.objects.get(username=username)
+            user.is_active = True # if you want to set active
+            return redirect('/home')
+    else:
+        ...
+    print('login unsuccesfull')
+    return redirect('/')
 
 def index(request):
     session = request.session
@@ -161,7 +211,6 @@ def index(request):
     context = getContext(request, app)
 
     return render(request, 'index.html', context)
-
 
 def loadComponent(request):
     ...

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style media="screen">
+    div {
+        display: block;
+    }
+    .formLi {
+        float: left;
+    }
+    .errorlist {
+        display: none;
+    }
+    .helptext {
+        display: none;
+    }
+    .inputForms {
+        margin-right: 25px;
+    }
+</style>
+
+<ul id="initPage">
+    <li class="formLi">
+        <div class="inputForms">
+            User Register:
+            <form method="POST" action="register">
+                {% csrf_token %}
+                <table>
+                    {{userregister}}
+                </table>
+                <input type="submit">
+            </form>
+        </div>
+    </li>
+
+    <li class="formLi">
+        <div class="inputForms">
+            User Login:
+            <form method="POST" action="login">
+                {% csrf_token %}
+                <table>
+                    {{userlogin}}
+                </table>
+                <input type="submit">
+            </form>
+        </div>
+    </li>
+</ul>
+
+<div>
+    <a href="home" name="toMain" value="Main Page">Main Page</a>
+</div>
+
+{% endblock %}
