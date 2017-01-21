@@ -91,6 +91,8 @@ class BaseClass(View):
             app = pickle.loads(app)
         else:
             app = Application()
+            app.load('Login')
+            app.load('Register')
         return app
 
     def _setApplication(self, request, app):
