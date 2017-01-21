@@ -1,4 +1,6 @@
 from .Component import Component
+from django.template.response import TemplateResponse
+
 
 class GetPosts(Component):
     def __init__(self):
@@ -11,6 +13,10 @@ class GetPosts(Component):
 
     def description(self):
         return 'Bring the Posts that are expected by user with topic name.'
+
+    def createHTML(self, request, instanceID):
+        context = {}
+        return TemplateResponse(request, 'getPosts.html', context).render()
 
     def execute(self):
 

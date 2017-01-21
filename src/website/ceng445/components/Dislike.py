@@ -1,4 +1,6 @@
 from .Component import Component
+from django.template.response import TemplateResponse
+
 
 class Dislike(Component):
 
@@ -14,6 +16,9 @@ class Dislike(Component):
 
     def description(self):
         return "User Dislikes a post given a userID and postID"
+
+    def createHTML(self, request, instanceID):
+        return TemplateResponse(request, 'dislike.html', {}).render()
 
     def execute(self):
 
