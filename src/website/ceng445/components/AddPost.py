@@ -1,4 +1,5 @@
 from .Component import Component
+from django.template.response import TemplateResponse
 
 class AddPost(Component):
 
@@ -15,6 +16,10 @@ class AddPost(Component):
 
     def description(self):
         return "Users are able to add topics by giving its name."
+
+    def createHTML(self, request, instanceID):
+        context = {}
+        return TemplateResponse(request, 'addPost.html', context).render()
 
     def execute(self):
 

@@ -152,6 +152,6 @@ class Application(object):
 
         for ID, comp in self._instances.items():
             ins, x, y = comp
-            grid[x][y] = ins.createHTML(request, ID)
+            grid[x][y] = ins.createHTML(request, ID).content
 
         return grid

@@ -1,4 +1,6 @@
 from .Component import Component
+from django.template.response import TemplateResponse
+
 
 class Like(Component):
 
@@ -14,6 +16,9 @@ class Like(Component):
 
     def description(self):
         return "User likes a post given a userID and postID"
+
+    def createHTML(self, request, instanceID):
+        return TemplateResponse(request, 'like.html', {}).render()
 
     def execute(self):
 
