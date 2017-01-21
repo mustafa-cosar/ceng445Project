@@ -18,7 +18,7 @@ class AddTopic(Component):
 
     def createHTML(self, request, instanceID):
         context = {}
-        return TemplateResponse(request, 'addTopic.py', context).render()
+        return TemplateResponse(request, 'addTopic.html', context).render()
 
     def execute(self):
 

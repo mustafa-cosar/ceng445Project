@@ -78,16 +78,11 @@ class BaseClass(View):
                 traceback.print_exc()
                 result = None
             context['executionResult'] = result
-        elif self.name == 'main':
-            self.setApplicationDataToContext(context, app, request)
-            self._setApplication(request, app)
-            self.saveContext(request, context)
-            return redirect('/')
 
         self.setApplicationDataToContext(context, app, request)
         self._setApplication(request, app)
         self.saveContext(request, context)
-        return redirect('/')
+        return redirect('/home')
         # return render(request, 'index.html', context)
 
     def _getApplication(self, request):

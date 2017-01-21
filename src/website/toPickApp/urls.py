@@ -4,8 +4,8 @@ from toPickApp.views import BaseClass, home,register,login
 
 urlpatterns = [
     url(r'^$', home),
-    url(r'^home$', BaseClass.as_view(name='main')),
-    url(r'^load$', BaseClass.as_view(name='main')),
+    url(r'^home$', BaseClass.as_view()),
+    url(r'^load$', BaseClass.as_view()),
     url(r'^login$', login),
     url(r'^register$', register),
     url(r'^loadComponent$', BaseClass.as_view(name='loadComponent')),
