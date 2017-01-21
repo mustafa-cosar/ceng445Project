@@ -1,0 +1,7 @@
+<div>
+    <form action="addpost" method="post">
+        {% csrf_token %}
+        <textarea name="content" rows="4" cols="32"></textarea>
+        <input type="submit" value="Send">
+    </form>
+</div>

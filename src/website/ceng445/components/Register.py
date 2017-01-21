@@ -1,4 +1,6 @@
 from .Component import Component
+from django.template.response import TemplateResponse
+
 
 class Register(Component):
         def __init__(self):
@@ -14,14 +16,15 @@ class Register(Component):
             return "User Register"
 
         def createHTML(self, request, instanceID):
-            print('-------------CREATE HTML')
-            return '''
-            <div>
-                <form action="/component-{}" method="post">
-                <input type="textbox" name="username"></input>
-                <input type="submit">
-                </form>
-            </div>'''.format(instanceID)
+            return TemplateResponse(request, 'test.html', {}).render()
+
+            # return '''
+            # <div>
+            #     <form action="/component-{}" method="post">
+            #     <input type="textbox" name="username"></input>
+            #     <input type="submit">
+            #     </form>
+            # </div>'''.format(instanceID)
 
         def execute(self):
             uName = self["username"]

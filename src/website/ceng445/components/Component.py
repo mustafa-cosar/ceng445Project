@@ -8,8 +8,10 @@ class Component(object):
         self.items = {}
         self.attributeTypes = {}
 
-
     def description(self):
+        pass
+
+    def createHTML(self, request, instanceID):
         pass
 
     def attributes(self):
