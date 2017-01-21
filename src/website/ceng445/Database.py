@@ -54,15 +54,32 @@ class Database:
         except IntegrityError:
             return False
 
-    def getPosts(self, topicName):
-        try:
-            rTopic = Topic.objects.get(name = topicName)
-            posts = Post.objects.get(topic = rTopic)
-            return posts
-        except Topic.DoesNotExist:
-            return []
-        except Post.DoesNotExist:
-            return []
+    def getPosts(self, request):
+        context = {}
+        context['posts'] = []
+        context['topics'] = []
+        for topic in Topic.objects.all():
+            context['topics'].append( (topic.id, topic.name) )
+
+        if request.user.is_authenticated():
+            user = request.user
+            topicid = request.POST.get('topicid',-1)
+            try:
+                topic = user.followers.get(id=topicid)
+                allPost = Post.objects.filter(topic=topic).order_by('-date')[:10]
+                for post in allPost:
+                    postInfo = {}
+                    postInfo['posttext'] = post.text
+                    postInfo['username'] = post.user.username
+                    postInfo['date'] = post.date
+                    postInfo['likecount'] = post.liking_users.count()
+                    postInfo['dislikecount'] = post.disliking_users.count()
+                    context['posts'].append(postInfo)
+            except:
+                pass
+        else:
+            pass
+        return context
 
     def addLike(self, user, post):
         try:
@@ -83,7 +100,6 @@ class Database:
         post.disliking_user.add(cUser)
         post.save()
         return True
-
 
 @Singleton
 class DatabaseOld:
