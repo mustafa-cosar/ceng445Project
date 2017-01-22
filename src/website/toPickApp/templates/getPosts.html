@@ -36,9 +36,9 @@
                         {% endif %}
                     {% else %}
                         {% if post.liked %}
-                            <img class="icon" src="{% static 'icons/like_red.png' %}" alt="liked" >
+                            <img id="{{post.id}}liked" class="icon" src="{% static 'icons/like_red.png' %}" alt="liked"></img>
                         {% else %}
-                            <img class="icon" src="{% static 'icons/like_white.png' %}" alt="notliked">
+                            <img id="{{post.id}}liked" class="icon" src="{% static 'icons/like_white.png' %}" alt="notliked"></img>
                         {% endif %}
                     {% endif %}
                 </span>
@@ -54,9 +54,9 @@
                         {% endif %}
                     {% else %}
                         {% if post.disliked %}
-                            <img class="icon" src="{% static 'icons/dislike_black.png' %}" alt="disliked">
+                            <img id="{{post.id}}disliked" class="icon" src="{% static 'icons/dislike_black.png' %}" alt="disliked"></img>
                         {% else %}
-                            <img class="icon" src="{% static 'icons/dislike_white.png' %}" alt="notdisliked">
+                            <img id="{{post.id}}disliked" class="icon" src="{% static 'icons/dislike_white.png' %}" alt="notdisliked"></img>
                         {% endif %}
                     {% endif %}
                 </span>
