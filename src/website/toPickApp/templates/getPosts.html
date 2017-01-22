@@ -10,7 +10,7 @@
     }
 </style>
 
-<div class="w3-container w3-teal">
+<div id="instanceID" class="w3-container w3-teal">
     <p>POSTS</p>
     <ul>
         {% for post in posts %}
@@ -23,28 +23,47 @@
                 {{post.posttext}}
             </div>
             <div class="likepanel">
-                {{post.likecount}}
-                {% if post.likeActive%}
-                    {% if post.liked %}
-                        <img class="icon" src="{% static 'icons/like_red.png' %}" alt="liked">
+                {% csrf_token %}
+                <span>
+                    <span id="{{post.id}}likecount">
+                        {{post.likecount}}
+                    </span>
+                    {% if post.likeActive%}
+                        {% if post.liked %}
+                            <img id="{{post.id}}liked" class="icon" src="{% static 'icons/like_red.png' %}" alt="liked" onclick="likePost('{{post.likeID}}','{{post.id}}')"></img>
+                        {% else %}
+                            <img id="{{post.id}}liked" class="icon" src="{% static 'icons/like_white.png' %}" alt="notliked" onclick="likePost('{{post.likeID}}','{{post.id}}')"></img>
+                        {% endif %}
                     {% else %}
-                        <img class="icon" src="{% static 'icons/like_white.png' %}" alt="notliked">
+                        {% if post.liked %}
+                            <img class="icon" src="{% static 'icons/like_red.png' %}" alt="liked" >
+                        {% else %}
+                            <img class="icon" src="{% static 'icons/like_white.png' %}" alt="notliked">
+                        {% endif %}
                     {% endif %}
-                {% else %}
-                    <img class="icon" src="{% static 'icons/like_disable.png' %}" alt="likeInactive">
-                {% endif %}
-                {{post.dislikecount}}
-                {% if post.dislikeActive %}
-                    {% if post.disliked %}
-                        <img class="icon" src="{% static 'icons/dislike_black.png' %}" alt="disliked">
+                </span>
+                <span>
+                    <span id="{{post.id}}dislikecount">
+                        {{post.dislikecount}}
+                    </span>
+                    {% if post.dislikeActive %}
+                        {% if post.disliked %}
+                            <img id="{{post.id}}disliked" class="icon" src="{% static 'icons/dislike_black.png' %}" alt="disliked" onclick="dislikePost('{{post.dislikeID}}','{{post.id}}')"></img>
+                        {% else %}
+                            <img id="{{post.id}}disliked" class="icon" src="{% static 'icons/dislike_white.png' %}" alt="notdisliked" onclick="dislikePost('{{post.dislikeID}}','{{post.id}}')"></img>
+                        {% endif %}
                     {% else %}
-                        <img class="icon" src="{% static 'icons/dislike_white.png' %}" alt="notdisliked">
+                        {% if post.disliked %}
+                            <img class="icon" src="{% static 'icons/dislike_black.png' %}" alt="disliked">
+                        {% else %}
+                            <img class="icon" src="{% static 'icons/dislike_white.png' %}" alt="notdisliked">
+                        {% endif %}
                     {% endif %}
-                {% else %}
-                    <img class="icon" src="{% static 'icons/dislike_disable.png' %}" alt="dislikeInactive">
-                {% endif %}
+                </span>
             </div>
         </li>
         {% endfor %}
     </ul>
+    <script src="{% static 'js/src/likePost.js' %}"></script>
+    <script src="{% static 'js/src/dislikePost.js' %}"></script>
 </div>

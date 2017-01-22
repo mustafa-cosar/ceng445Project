@@ -172,8 +172,10 @@ class AjaxHandler(BaseClass):
             instance = app._instances.get(instanceID, [None])[0]
             if instance:
                 try:
+                    print(componentName, instanceID)
                     response = instance.handleAJAXRequest(request)
                 except:
+                    traceback.print_exc()
                     response = self.getErrorResponse('UNKNOWN')
             else:
                 response = self.getErrorResponse('INSTANCEID')

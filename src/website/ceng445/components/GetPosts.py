@@ -15,7 +15,7 @@ class GetPosts(Component):
         return 'Bring the Posts that are expected by user with topic name.'
 
     def createHTML(self, request, instanceID):
-        context = self['DB'].getPosts(request)
+        context = self['DB'].getPosts(request, instanceID)
         return TemplateResponse(request, 'getPosts.html', context).render()
 
     def execute(self):

@@ -1,6 +1,7 @@
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "website.settings")
 
+import traceback
 import pickle
 import sqlite3
 from toPickApp.models import *
@@ -55,8 +56,9 @@ class Database:
         except IntegrityError:
             return False
 
-    def getPosts(self, request):
+    def getPosts(self, request, instanceID):
         context = {}
+        context['instanceID'] = instanceID
         context['posts'] = []
 
         if request.user.is_authenticated():
@@ -66,6 +68,7 @@ class Database:
                 allPost = Post.objects.filter(topic__in = allTopic).order_by('-date')
                 for post in allPost:
                     postInfo = {}
+                    postInfo['id'] = post.id
                     postInfo['posttext'] = post.text
                     postInfo['username'] = post.user.username
                     postInfo['date'] = post.date
@@ -84,12 +87,16 @@ class Database:
                         app = None
                     if app:
                         app = pickle.loads(app)
-                        if app._isInstance('Like'):
+                        likeInstance = app._isInstance('Like')
+                        dislikeInstance = app._isInstance('Dislike')
+                        if likeInstance:
                             postInfo['likeActive'] = True
+                            postInfo['likeID'] = likeInstance
                         else:
                             postInfo['likeActive'] = False
-                        if app._isInstance('Dislike'):
+                        if dislikeInstance:
                             postInfo['dislikeActive'] = True
+                            postInfo['dislikeID'] = dislikeInstance
                         else:
                             postInfo['dislikeActive'] = False
                     else:
@@ -102,23 +109,68 @@ class Database:
             pass
         return context
 
+    def manageLike(self,request):
+        retVal = {}
+        if request.user.is_authenticated():
+            user = request.user
+            postID = request.POST.get('postID')
+            try:
+                post = Post.objects.get(id=postID)
+                if(user in list(post.liking_users.all())):
+                    post.liking_users.remove(user)
+                    post.save()
+                    retVal['isLike'] = True
+                else:
+                    self.addLike(user,post)
+                    retVal['isLike'] = False
+                retVal['postID'] = postID
+                retVal['count'] = post.liking_users.all().count()
+                retVal['count2'] = post.disliking_users.all().count()
+                retVal['result'] = 'success'
+                return retVal
+            except:
+                traceback.print_exc()
+        return {'result':'fail'}
+    def manageDislike(self,request):
+        print('DISLIKE')
+        retVal = {}
+        if request.user.is_authenticated():
+            user = request.user
+            postID = request.POST.get('postID')
+            try:
+                post = Post.objects.get(id=postID)
+                if(user in list(post.disliking_users.all())):
+                    retVal['isDislike'] = True
+                    post.disliking_users.remove(user)
+                    post.save()
+                else:
+                    self.addDislike(user,post)
+                    retVal['isDislike'] = False
+                retVal['postID'] = postID
+                retVal['count'] = post.disliking_users.all().count()
+                retVal['count2'] = post.liking_users.all().count()
+                retVal['result'] = 'success'
+                return retVal
+            except:
+                ...
+        return {'result':'fail'}
     def addLike(self, user, post):
         try:
-            post.disliking_user.objects.filter(user = user).delete()
+            post.disliking_users.remove(user)
         except:
             ...
 
-        post.liking_user.add(cUser)
+        post.liking_users.add(user)
         post.save()
         return True
 
     def addDislike(self, user, post):
         try:
-            post.liking_user.objects.filter(user = user).delete()
+            post.liking_users.remove(user)
         except:
             ...
 
-        post.disliking_user.add(cUser)
+        post.disliking_users.add(user)
         post.save()
         return True
 
