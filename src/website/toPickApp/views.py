@@ -131,7 +131,7 @@ class BaseClass(View):
             context = request.session['context']
             del request.session['context']
         else:
-            context = {}
+            context = {'title': 'ToPickApp'}
         return context
 
     def setApplicationDataToContext(self, context, app, request):
