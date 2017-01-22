@@ -101,8 +101,8 @@ class Application(object):
     def _isInstance(self, compName):
         for key, val in self._instances.items():
             if str(val[0]) == compName:
-                return True
-        return False
+                return key
+        return None
 
 
     def removeInstance(self,  id):

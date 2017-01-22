@@ -1,6 +1,6 @@
 from .Component import Component
 from django.template.response import TemplateResponse
-
+from django.http import JsonResponse
 
 class Like(Component):
 
@@ -19,6 +19,11 @@ class Like(Component):
 
     def createHTML(self, request, instanceID):
         return TemplateResponse(request, 'like.html', {}).render()
+
+    def handleAJAXRequest(self, request):
+        if request.method == 'POST':
+            result = self['DB'].manageLike(request)
+            return JsonResponse(result)
 
     def execute(self):
 
