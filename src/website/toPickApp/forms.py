@@ -3,6 +3,7 @@ from django.forms import ModelForm
 from django import forms
 from django.contrib.auth.models import User
 from django.forms import ValidationError
+from toPickApp.models import Topic
 import traceback
 
 class UserRegister(ModelForm):
@@ -62,3 +63,8 @@ class UserLogin(forms.Form):
             return self.cleaned_data['password']
     def clean(self):
         return self.cleaned_data
+
+
+class AddPostForm(forms.Form):
+    text = forms.CharField(widget=forms.Textarea)
+    topic = forms.ModelChoiceField(queryset=Topic.objects.all())

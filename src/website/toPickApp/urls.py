@@ -1,9 +1,10 @@
 from django.conf.urls import url
 
-from toPickApp.views import BaseClass, home,register,login
+from toPickApp.views import BaseClass, AjaxHandler, home,register,login
 
 urlpatterns = [
     url(r'^$', home),
+    url(r'^ajax/(?P<componentName>\w+)/(?P<instanceID>\S+)$', AjaxHandler.as_view()),
     url(r'^home$', BaseClass.as_view()),
     url(r'^load$', BaseClass.as_view()),
     url(r'^login$', login),

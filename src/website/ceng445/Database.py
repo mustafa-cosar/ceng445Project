@@ -46,14 +46,14 @@ class Database:
         post = Post()
         post.user = user
         post.topic = topic
-        post.post_text = postText
+        post.text = postText
 
         try:
             post.save()
             return True
         except IntegrityError:
             return False
-            
+
     def getPosts(self, topicName):
         try:
             rTopic = Topic.objects.get(name = topicName)
