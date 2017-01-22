@@ -98,6 +98,13 @@ class Application(object):
             retVal[key] = (str(val[0]), val[1], val[2])
         return retVal
 
+    def _isInstance(self, compName):
+        for key, val in self._instances.items():
+            if str(val[0]) == compName:
+                return True
+        return False
+
+
     def removeInstance(self,  id):
         if self._instances.get(id, False):
             del self._instances[id]

@@ -1,18 +1,49 @@
-<div class="w3-container w3-teal">
-    <p>TOPICS</p>
-    <select class="" name="">
-        {% for topic in topics %}
-            <option value="{{topic.0}}">{{topic.1}}</option>
-        {% endfor %}
-    </select>
-</div>
+{% load static %}
+
+<style media="screen">
+    .icon {
+        width: 20px;
+        height: 20px;
+    }
+    .likepanel {
+        align-items: flex-end;
+    }
+</style>
 
 <div class="w3-container w3-teal">
     <p>POSTS</p>
     <ul>
         {% for post in posts %}
         <li>
-            <p>post.content</p>
+            <div>
+                <strong>{{post.username}}</strong> --
+                <strong>{{post.date|date:"D d M Y"}}</strong>
+            </div>
+            <div class="w3-border">
+                {{post.posttext}}
+            </div>
+            <div class="likepanel">
+                {{post.likecount}}
+                {% if post.likeActive%}
+                    {% if post.liked %}
+                        <img class="icon" src="{% static 'icons/like_red.png' %}" alt="liked">
+                    {% else %}
+                        <img class="icon" src="{% static 'icons/like_white.png' %}" alt="notliked">
+                    {% endif %}
+                {% else %}
+                    <img class="icon" src="{% static 'icons/like_disable.png' %}" alt="likeInactive">
+                {% endif %}
+                {{post.dislikecount}}
+                {% if post.dislikeActive %}
+                    {% if post.disliked %}
+                        <img class="icon" src="{% static 'icons/dislike_black.png' %}" alt="disliked">
+                    {% else %}
+                        <img class="icon" src="{% static 'icons/dislike_white.png' %}" alt="notdisliked">
+                    {% endif %}
+                {% else %}
+                    <img class="icon" src="{% static 'icons/dislike_disable.png' %}" alt="dislikeInactive">
+                {% endif %}
+            </div>
         </li>
         {% endfor %}
     </ul>

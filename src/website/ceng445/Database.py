@@ -1,6 +1,7 @@
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "website.settings")
 
+import pickle
 import sqlite3
 from toPickApp.models import *
 from django.contrib.auth.models import User
@@ -57,16 +58,12 @@ class Database:
     def getPosts(self, request):
         context = {}
         context['posts'] = []
-        context['topics'] = []
-        for topic in Topic.objects.all():
-            context['topics'].append( (topic.id, topic.name) )
 
         if request.user.is_authenticated():
             user = request.user
-            topicid = request.POST.get('topicid',-1)
             try:
-                topic = user.followers.get(id=topicid)
-                allPost = Post.objects.filter(topic=topic).order_by('-date')[:10]
+                allTopic = list(user.followers.all())
+                allPost = Post.objects.filter(topic__in = allTopic).order_by('-date')
                 for post in allPost:
                     postInfo = {}
                     postInfo['posttext'] = post.text
@@ -74,6 +71,30 @@ class Database:
                     postInfo['date'] = post.date
                     postInfo['likecount'] = post.liking_users.count()
                     postInfo['dislikecount'] = post.disliking_users.count()
+                    postInfo['liked'] = False
+                    postInfo['disliked'] = False
+
+                    if(user in list(post.liking_users.all())):
+                        postInfo['liked'] = True
+                    elif (user in list(post.disliking_users.all())):
+                        postInfo['disliked'] = True
+                    try:
+                        app = request.session.get('app', None)
+                    except:
+                        app = None
+                    if app:
+                        app = pickle.loads(app)
+                        if app._isInstance('Like'):
+                            postInfo['likeActive'] = True
+                        else:
+                            postInfo['likeActive'] = False
+                        if app._isInstance('Dislike'):
+                            postInfo['dislikeActive'] = True
+                        else:
+                            postInfo['dislikeActive'] = False
+                    else:
+                        postInfo['likeActive'] = False
+                        postInfo['dislikeActive'] = False
                     context['posts'].append(postInfo)
             except:
                 pass
