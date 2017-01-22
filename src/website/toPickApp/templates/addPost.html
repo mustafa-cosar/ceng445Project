@@ -1,7 +1,18 @@
-<div>
-    <form action="addpost" method="post">
+<div id="{{instanceID}}" class="w3-container w3-teal">
+    <p class="w3-large">Post something</p>
+    <form class="w3-form" action="ajax/addpost/{{instanceID}}" method="post">
         {% csrf_token %}
-        <textarea name="content" rows="4" cols="32"></textarea>
-        <input type="submit" value="Send">
+        <label class="w3-label w3-text-white">Your message</label>
+        <textarea class="w3-input w3-margin-bottom" name="text" rows="4" cols="32"></textarea>
+        <label class="w3-label w3-text-white">Topic</label>
+        <select class="w3-select" name="topic">
+            {% for topic in topics %}
+                <option value="{{topic.id}}">{{topic.name}}</option>
+            {% endfor %}
+        </select>
+        <button class="w3-btn w3-margin-top w3-margin-bottom" type="button" onclick="addPost.submit($('#{{instanceID}} > form'))">Post</button>
     </form>
+
+    {% load static %}
+    <script src="{% static 'js/src/addPost.js' %}"></script>
 </div>

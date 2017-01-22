@@ -2,9 +2,8 @@
 
 {% block content %}
 
-<script rel="text/javascript" href="/static/"></script>
 
-<div class="w3-responsive w3-container">
+<div class="w3-container">
     <table class="w3-table w3-gray">
         {% for row in grid %}
         <tr>
@@ -16,58 +15,61 @@
     </table>
 </div>
 
-<form class="w3-container w3-teal w3-half w3-border" action="loadComponent" method="post">
-    {% csrf_token %}
-    <strong class="w3-large">Available Components: </strong><br/>
-    {% for a in availableComponents%}
-        <input class="w3-check" type="checkbox" name="component" value="{{a}}">
-            {{a}}
-        </input>
-        </br>
-    {% endfor %}
-    <input class="w3-btn w3-margin-top w3-margin-bottom" type="submit" value="Load">
-</form>
+<div class="w3-container w3-teal">
 
-<form class="w3-container w3-teal w3-half w3-border" action="addInstance" method="post">
-    {% csrf_token %}
-    <strong class="w3-large">Loaded Components: </strong><br/>
-    {% for a,b in loadedComponents %}
-        <input class="w3-radio" type="radio" name="component" value="{{a}}">
-            {{a}} : {{b}}
-        </input>
-        </br>
-    {% endfor %}
-    <label class="w3-label w3-text-white">x: </label>
-    <input class="w3-input" type="textbox" name="x">
-    <label class="w3-label w3-text-white">y: </label>
-    <input class="w3-input" type="textbox" name="y">
+    <form class="w3-container w3-teal w3-half" action="loadComponent" method="post">
+        {% csrf_token %}
+        <strong class="w3-large">Available Components: </strong><br/>
+        {% for a in availableComponents%}
+            <input class="w3-check" type="checkbox" name="component" value="{{a}}">
+                {{a}}
+            </input>
+            </br>
+        {% endfor %}
+        <input class="w3-btn w3-margin-top w3-margin-bottom" type="submit" value="Load">
+    </form>
 
-    <input class="w3-btn w3-margin-top w3-margin-bottom" type="submit" value="Add Instance">
-</form>
+    <form class="w3-container w3-teal w3-half" action="addInstance" method="post">
+        {% csrf_token %}
+        <strong class="w3-large">Loaded Components: </strong><br/>
+        {% for a,b in loadedComponents %}
+            <input class="w3-radio" type="radio" name="component" value="{{a}}">
+                {{a}} : {{b}}
+            </input>
+            </br>
+        {% endfor %}
+        <label class="w3-label w3-text-white">x: </label>
+        <input class="w3-input" type="textbox" name="x">
+        <label class="w3-label w3-text-white">y: </label>
+        <input class="w3-input" type="textbox" name="y">
 
-<form class="w3-container w3-teal w3-half w3-border" action="removeInstance" method="post">
-    {% csrf_token %}
-    <strong class="w3-large">Instances: </strong><br/>
-    {% for id, instance in instances %}
-        <input class="w3-radio" type="radio" name="instance" value="{{id}}">
-            {{instance.0}} : id: {{id}}, x: {{instance.1}}, y:{{instance.2}}
-        </input>
-        </br>
-    {% endfor %}
-    <input class="w3-btn w3-margin-top w3-margin-bottom" type="submit" value="Remove Instance">
-</form>
+        <input class="w3-btn w3-margin-top w3-margin-bottom" type="submit" value="Add Instance">
+    </form>
 
-<form class="w3-container w3-teal w3-half w3-border" action="saveDesign" method="post">
-    {% csrf_token %}
-    <input class="w3-input w3-margin-top" type="textbox" name="filePath"></input>
-    <input class="w3-btn w3-margin-top w3-margin-bottom" type="submit" value="Save Design"></input>
-</form>
+    <form class="w3-container w3-teal w3-half" action="removeInstance" method="post">
+        {% csrf_token %}
+        <strong class="w3-large">Instances: </strong><br/>
+        {% for id, instance in instances %}
+            <input class="w3-radio" type="radio" name="instance" value="{{id}}">
+                {{instance.0}} : id: {{id}}, x: {{instance.1}}, y:{{instance.2}}
+            </input>
+            </br>
+        {% endfor %}
+        <input class="w3-btn w3-margin-top w3-margin-bottom" type="submit" value="Remove Instance">
+    </form>
 
-<form class="w3-container w3-teal w3-half w3-border" action="loadDesign" method="post">
-    {% csrf_token %}
-    <input class="w3-input w3-margin-top" type="textbox" name="filePath">
-    <input class="w3-btn w3-margin-top w3-margin-bottom" type="submit" value="Load Design">
-</form>
+    <form class="w3-container w3-teal w3-half" action="saveDesign" method="post">
+        {% csrf_token %}
+        <input class="w3-input w3-margin-top" type="textbox" name="filePath"></input>
+        <input class="w3-btn w3-margin-top w3-margin-bottom" type="submit" value="Save Design"></input>
+    </form>
 
+    <form class="w3-container w3-teal w3-half" action="loadDesign" method="post">
+        {% csrf_token %}
+        <input class="w3-input w3-margin-top" type="textbox" name="filePath">
+        <input class="w3-btn w3-margin-top w3-margin-bottom" type="submit" value="Load Design">
+    </form>
+
+</div>
 
 {% endblock %}

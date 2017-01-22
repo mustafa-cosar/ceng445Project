@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views import View
 from toPickApp.forms import *
 from django.contrib.auth.models import User
@@ -157,9 +157,37 @@ class BaseClass(View):
 
     def setGridToContext(self, context, app, request):
         grid = app.makeGridHTML(request)
-        print(grid)
         context['grid'] = grid
         return context
+
+class AjaxHandler(BaseClass):
+
+    def post(self, request, *args, **kwargs):
+        componentName = kwargs.get('componentName', None)
+        instanceID = kwargs.get('instanceID', None)
+
+        app = self._getApplication(request)
+
+        if(instanceID):
+            instance = app._instances.get(instanceID, [None])[0]
+            if instance:
+                try:
+                    response = instance.handleAJAXRequest(request)
+                except:
+                    response = self.getErrorResponse('UNKNOWN')
+            else:
+                response = self.getErrorResponse('INSTANCEID')
+        else:
+            response = self.getErrorResponse('INSTANCEID')
+
+        return response
+
+    def getErrorResponse(self, error):
+
+        if error == 'INSTANCEID':
+            return JsonResponse({'error': 'Instance ID is required.'})
+
+        return JsonResponse({'error': 'An unknown error occured.'})
 
 def home(request):
     context = {}

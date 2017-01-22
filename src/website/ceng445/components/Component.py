@@ -14,6 +14,9 @@ class Component(object):
     def createHTML(self, request, instanceID):
         pass
 
+    def handleAJAXRequest(self, request):
+        pass
+
     def attributes(self):
         attributeList = []
         for _attr, _type in self.attributeTypes.items():
