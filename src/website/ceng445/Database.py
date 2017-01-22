@@ -1,6 +1,7 @@
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "website.settings")
 
+import pickle
 import sqlite3
 from toPickApp.models import *
 from django.contrib.auth.models import User
@@ -54,15 +55,52 @@ class Database:
         except IntegrityError:
             return False
 
-    def getPosts(self, topicName):
-        try:
-            rTopic = Topic.objects.get(name = topicName)
-            posts = Post.objects.get(topic = rTopic)
-            return posts
-        except Topic.DoesNotExist:
-            return []
-        except Post.DoesNotExist:
-            return []
+    def getPosts(self, request):
+        context = {}
+        context['posts'] = []
+
+        if request.user.is_authenticated():
+            user = request.user
+            try:
+                allTopic = list(user.followers.all())
+                allPost = Post.objects.filter(topic__in = allTopic).order_by('-date')
+                for post in allPost:
+                    postInfo = {}
+                    postInfo['posttext'] = post.text
+                    postInfo['username'] = post.user.username
+                    postInfo['date'] = post.date
+                    postInfo['likecount'] = post.liking_users.count()
+                    postInfo['dislikecount'] = post.disliking_users.count()
+                    postInfo['liked'] = False
+                    postInfo['disliked'] = False
+
+                    if(user in list(post.liking_users.all())):
+                        postInfo['liked'] = True
+                    elif (user in list(post.disliking_users.all())):
+                        postInfo['disliked'] = True
+                    try:
+                        app = request.session.get('app', None)
+                    except:
+                        app = None
+                    if app:
+                        app = pickle.loads(app)
+                        if app._isInstance('Like'):
+                            postInfo['likeActive'] = True
+                        else:
+                            postInfo['likeActive'] = False
+                        if app._isInstance('Dislike'):
+                            postInfo['dislikeActive'] = True
+                        else:
+                            postInfo['dislikeActive'] = False
+                    else:
+                        postInfo['likeActive'] = False
+                        postInfo['dislikeActive'] = False
+                    context['posts'].append(postInfo)
+            except:
+                pass
+        else:
+            pass
+        return context
 
     def addLike(self, user, post):
         try:
@@ -83,7 +121,6 @@ class Database:
         post.disliking_user.add(cUser)
         post.save()
         return True
-
 
 @Singleton
 class DatabaseOld:

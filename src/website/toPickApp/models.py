@@ -5,7 +5,10 @@ from django.contrib.auth.models import User
 
 class Topic(models.Model):
     name = models.CharField('Topic Name' ,max_length = 256, unique = True)
+    user = models.ManyToManyField(User, related_name='followers',blank=True)
 
+    class Meta:
+        managed = True
     def __str__(self):
         return str(self.id) + ' - ' + str(self.name)
 
@@ -16,7 +19,8 @@ class Post(models.Model):
     date = models.DateTimeField('Post Date', auto_now_add=True)
     liking_users = models.ManyToManyField(User, related_name='liked_posts', blank=True)
     disliking_users = models.ManyToManyField(User, related_name='disliked_posts', blank=True)
-
+    class Meta:
+        managed = True
     def __str__(self):
         return str(self.id) + ' - ' + str(self.text)[:30]
 
