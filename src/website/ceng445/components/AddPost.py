@@ -1,7 +1,6 @@
 from .Component import Component
 from django.template.response import TemplateResponse
 from django.http import JsonResponse
-from toPickApp.forms import AddPostForm
 from toPickApp.models import Topic
 
 class AddPost(Component):
@@ -22,7 +21,6 @@ class AddPost(Component):
 
     def createHTML(self, request, instanceID):
         context = {}
-        context['addPostForm'] = AddPostForm()
         context['topics'] = Topic.objects.all()
         context['instanceID'] = instanceID
         return TemplateResponse(request, 'addPost.html', context).render()
@@ -33,7 +31,6 @@ class AddPost(Component):
             topicID = request.POST.get('topic')
             topic = Topic.objects.get(id=topicID)
             text = request.POST.get('text')
-            print('POST TEXT: ', text)
 
             success = self['DB'].addPost(user, topic, text)
 

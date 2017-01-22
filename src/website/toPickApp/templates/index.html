@@ -3,8 +3,8 @@
 {% block content %}
 
 
-<div class="w3-container">
-    <table class="w3-table w3-gray">
+<div class="w3-container w3-teal w3-margin-top">
+    <table class="w3-table w3-gray w3-margin-top w3-margin-bottom">
         {% for row in grid %}
         <tr>
             {% for col in row %}
@@ -15,7 +15,7 @@
     </table>
 </div>
 
-<div class="w3-container w3-teal">
+<div class="w3-container w3-teal w3-margin-top w3-margin-bottom">
 
     <form class="w3-container w3-teal w3-half" action="loadComponent" method="post">
         {% csrf_token %}

@@ -1,3 +1,12 @@
-<div>
-    ADD TOPIC
+<div id="{{instanceID}}" class="w3-container w3-teal">
+    <p class="w3-large">Add a topic</p>
+    <form class="w3-form" action="ajax/addtopic/{{instanceID}}" method="post">
+        {% csrf_token %}
+        <label class="w3-label w3-text-white">Topic Name</label>
+        <input class="w3-input" type="text" name="topicName">
+        <button class="w3-btn w3-margin-top w3-margin-bottom" type="button" onclick="addTopic($('#{{instanceID}}'))">Add</button>
+    </form>
+
+    {% load static %}
+    <script type="text/javascript" src="{% static 'js/src/addTopic.js' %}"></script>
 </div>

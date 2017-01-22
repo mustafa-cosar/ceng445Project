@@ -1,6 +1,6 @@
 from .Component import Component
 from django.template.response import TemplateResponse
-
+from django.http import JsonResponse
 
 class AddTopic(Component):
 
@@ -18,7 +18,19 @@ class AddTopic(Component):
 
     def createHTML(self, request, instanceID):
         context = {}
+        context['instanceID'] = instanceID
         return TemplateResponse(request, 'addTopic.html', context).render()
+
+    def handleAJAXRequest(self, request):
+
+        if request.method == 'POST':
+            topicName = request.POST.get('topicName', None)
+
+            success = self['DB'].addTopic(topicName)
+            if success:
+                return JsonResponse({'result': 'success'})
+            else:
+                raise Exception
 
     def execute(self):
 
