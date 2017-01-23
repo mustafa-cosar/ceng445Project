@@ -10,8 +10,9 @@
                 <option value="{{topic.id}}">{{topic.name}}</option>
             {% endfor %}
         </select>
-        <button class="w3-btn w3-margin-top w3-margin-bottom" type="button" onclick="addPost.submit($('#{{instanceID}} > form'))">Post</button>
+        <button class="w3-btn w3-margin-top w3-margin-bottom" type="button" onclick="addPost.submit($('#{{instanceID}} > form'), '{{instanceID}}')">Post</button>
     </form>
+    <div id="success{{instanceID}}" class="w3-green w3-large w3-padding w3-center" hidden>Successfully posted!</div>
 
     {% load static %}
     <script src="{% static 'js/src/addPost.js' %}"></script>
