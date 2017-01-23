@@ -1,0 +1,36 @@
+{% load static %}
+
+<div id="{{instanceID}}" class="w3-container w3-teal">
+    <p>TOPICS</p>
+    <form class="w3-form" action="ajax/filterTopic/{{filterID}}" method="post" {{isHidden}}>
+        {% csrf_token %}
+        <input class="w3-input w3-margin-left" type="textbox" name="topicText">
+        <input class="w3-btn w3-margin-right w3-margin-right" type="submit" value="Filter Topics">
+    </form>
+
+    <ul>
+        {% for topic in topics %}
+        <li>
+            <span id="{{topic.id}}topic">
+                <span class="w3-border">
+                    {{topic.name}}
+                </span>
+                {% if topic.following %}
+                    {% if topic.followActive %}
+                        <img id="{{topic.id}}following" alt="following" class="icon" src="{% static 'icons/tick_button.png' %}" onclick="followTopic('{{topic.followID}}','{{topic.id}}')">
+                    {% else %}
+                        <img id="{{topic.id}}following" alt="following" class="icon" src="{% static 'icons/tick_button.png' %}" onclick="">
+                    {% endif %}
+                {% else %}
+                    {% if topic.followActive %}
+                        <img id="{{topic.id}}following" alt="following" class="icon" src="{% static 'icons/follow_button.png' %}" onclick="followTopic('{{topic.followID}}','{{topic.id}}')">
+                    {% else %}
+                        <img id="{{topic.id}}following" alt="following" class="icon" src="{% static 'icons/follow_button.png' %}" onclick="">
+                    {% endif %}
+                {% endif %}
+            </span>
+        </li>
+        {% endfor %}
+    </ul>
+
+</div>

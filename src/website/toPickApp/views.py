@@ -94,6 +94,7 @@ class BaseClass(View):
             app = Application()
             app.load('Login')
             app.load('Register')
+            app.load('Logout')
         return app
 
     def _setApplication(self, request, app):

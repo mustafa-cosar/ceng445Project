@@ -56,6 +56,50 @@ class Database:
         except IntegrityError:
             return False
 
+    def getTopics(self,request, instanceID):
+        context = {}
+        try:
+            app = request.session.get('app', None)
+        except:
+            app = None
+        if app:
+            app = pickle.loads(app)
+            filterID = app._isInstance('FilterTopics')
+            followID = app._isInstance('FollowTopic')
+        else:
+            followID = None
+            filterID = None
+
+        if filterID:
+            context['isHidden'] = ''
+            context['filterID'] = filterID
+        else:
+            context['isHidden'] = 'hidden'
+            context['filterID'] = 0
+        context['topics'] = []
+        topics = Topic.objects.all()
+        print(topics)
+        user = request.user
+        for topic in topics:
+            topicInfo = {}
+            topicInfo['id'] = topic.id
+            topicInfo['name'] = topic.name
+            if user and user.is_active:
+                if topic in list(user.followers.all()):
+                    topicInfo['following'] = True
+                else:
+                    topicInfo['following'] = False
+                if followID:
+                    topicInfo['followID'] = followID
+                    topicInfo['followActive'] = True
+                else:
+                    topicInfo['followActive'] = False
+            else:
+                topicInfo['following'] = False
+                topicInfo['followActive'] = False
+            context['topics'].append(topicInfo)
+        return context
+
     def getPosts(self, request, instanceID):
         context = {}
         context['instanceID'] = instanceID

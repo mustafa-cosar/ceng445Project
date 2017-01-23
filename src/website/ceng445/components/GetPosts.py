@@ -1,6 +1,7 @@
 from .Component import Component
 from django.template.response import TemplateResponse
 from django.shortcuts import render
+from django.http import JsonResponse
 
 
 class GetPosts(Component):
@@ -13,7 +14,7 @@ class GetPosts(Component):
         return 'GetPosts'
 
     def description(self):
-        return 'Bring the Posts that are expected by user with topic name.'
+        return 'Brings the Posts that are followed by user with topic name.'
 
     def createHTML(self, request, instanceID):
         context = self['DB'].getPosts(request, instanceID)
