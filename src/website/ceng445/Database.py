@@ -59,6 +59,7 @@ class Database:
 
     def getTopics(self, request, instanceID):
         context = {}
+        context['instanceID'] = instanceID
         try:
             app = request.session.get('app', None)
         except:

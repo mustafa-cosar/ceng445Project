@@ -10,11 +10,19 @@ if (typeof(addPost) === 'undefined')
                 type: 'POST',
                 data: form.serialize(),
                 success: function (response) {
-                    console.log(response);
-                    $('#success'+instanceID).show('fast');
-                    setTimeout(function(){
-                        $('#success'+instanceID).hide('fast');
-                    }, 3000);
+                    if (!response.error)
+                    {
+                        console.log(response);
+                        $('#success'+instanceID).show('fast');
+                        setTimeout(function(){
+                            $('#success'+instanceID).hide('fast');
+                        }, 3000);
+                        form.find('textarea').val('');
+                    }
+                    else
+                    {
+                        alert('An error occurred.');
+                    }
                 }
             });
         }

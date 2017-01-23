@@ -6,15 +6,15 @@
         <div id="{{topic.id}}topic" class="w3-margin-bottom">
             {% if topic.following %}
                 {% if topic.followActive %}
-                    <img id="{{topic.id}}following" alt="following" class="icon" src="{% static 'icons/tick_button.png' %}" onclick="followTopic('{{topic.followID}}','{{topic.id}}')">
+                    <img id="{{topic.id}}following" alt="following" class="icon topicFollow" src="{% static 'icons/tick_button.png' %}" onclick="followTopic('{{topic.followID}}','{{topic.id}}')">
                 {% else %}
-                    <img id="{{topic.id}}following" alt="following" class="icon" src="{% static 'icons/tick_button.png' %}" onclick="">
+                    <img id="{{topic.id}}following" alt="following" class="icon topicFollow" src="{% static 'icons/tick_button.png' %}" onclick="">
                 {% endif %}
             {% else %}
                 {% if topic.followActive %}
-                    <img id="{{topic.id}}following" alt="following" class="icon" src="{% static 'icons/follow_button.png' %}" onclick="followTopic('{{topic.followID}}','{{topic.id}}')">
+                    <img id="{{topic.id}}following" alt="following" class="icon topicFollow" src="{% static 'icons/follow_button.png' %}" onclick="followTopic('{{topic.followID}}','{{topic.id}}')">
                 {% else %}
-                    <img id="{{topic.id}}following" alt="following" class="icon" src="{% static 'icons/follow_button.png' %}" onclick="">
+                    <img id="{{topic.id}}following" alt="following" class="icon topicFollow" src="{% static 'icons/follow_button.png' %}" onclick="">
                 {% endif %}
             {% endif %}
             <span class="">
@@ -24,3 +24,11 @@
     </li>
     {% endfor %}
 </ul>
+
+
+<style>
+    .icon.topicFollow {
+        width: 20px;
+        height: 20px;
+    }
+</style>
