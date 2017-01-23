@@ -1,0 +1,26 @@
+{% load static %}
+
+<ul class="w3-ul w3-hoverable w3-margin-bottom">
+    {% for topic in topics %}
+    <li class="w3-hover-text-black">
+        <div id="{{topic.id}}topic" class="w3-margin-bottom">
+            {% if topic.following %}
+                {% if topic.followActive %}
+                    <img id="{{topic.id}}following" alt="following" class="icon" src="{% static 'icons/tick_button.png' %}" onclick="followTopic('{{topic.followID}}','{{topic.id}}')">
+                {% else %}
+                    <img id="{{topic.id}}following" alt="following" class="icon" src="{% static 'icons/tick_button.png' %}" onclick="">
+                {% endif %}
+            {% else %}
+                {% if topic.followActive %}
+                    <img id="{{topic.id}}following" alt="following" class="icon" src="{% static 'icons/follow_button.png' %}" onclick="followTopic('{{topic.followID}}','{{topic.id}}')">
+                {% else %}
+                    <img id="{{topic.id}}following" alt="following" class="icon" src="{% static 'icons/follow_button.png' %}" onclick="">
+                {% endif %}
+            {% endif %}
+            <span class="">
+                {{topic.name}}
+            </span>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
