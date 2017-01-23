@@ -19,4 +19,4 @@ class FollowTopic(Component):
             return JsonResponse(result)
 
     def createHTML(self, request, instanceID):
-        return TemplateResponse(request, 'getTopics.html', {}).render()
+        return TemplateResponse(request, 'followTopics.html', {}).render()

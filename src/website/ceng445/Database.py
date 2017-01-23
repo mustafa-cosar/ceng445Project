@@ -198,6 +198,29 @@ class Database:
             except:
                 ...
         return {'result':'fail'}
+
+    def followTopic(self, request):
+        print('FOLLOW')
+        retVal = {}
+        topicID = request.POST.get('topicID')
+        retVal['topicID'] = topicID
+        if request.user.is_authenticated():
+            retVal['result'] = 'success'
+            topic = Topic.objects.get(id=topicID)
+            user = request.user
+            if user in list(topic.user.all()):
+                topic.user.remove(user)
+                topic.save()
+                retVal['following'] = True
+            else:
+                topic.user.add(user)
+                topic.save()
+                retVal['following'] = False
+        else:
+            retVal['result'] = 'success'
+            retVal['following'] = False
+        return retVal
+
     def addLike(self, user, post):
         try:
             post.disliking_users.remove(user)
