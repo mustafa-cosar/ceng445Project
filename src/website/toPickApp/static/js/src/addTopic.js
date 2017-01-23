@@ -1,5 +1,5 @@
 
-function addTopic(component) {
+function addTopic(component, instanceID) {
 
     jQuery.ajax({
         url: component.find('form').attr('action'),
@@ -9,7 +9,10 @@ function addTopic(component) {
             console.log(response);
             if (response.result == 'success')
             {
-                alert('Topic has been added succesfully!');
+                $('#success'+instanceID).show('fast');
+                setTimeout(function(){
+                    $('#success'+instanceID).hide('fast');
+                }, 3000);
             }
             else if(response.error)
             {

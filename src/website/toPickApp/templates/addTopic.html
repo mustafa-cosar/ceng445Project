@@ -4,8 +4,9 @@
         {% csrf_token %}
         <label class="w3-label w3-text-white">Topic Name</label>
         <input class="w3-input" type="text" name="topicName">
-        <button class="w3-btn w3-margin-top w3-margin-bottom" type="button" onclick="addTopic($('#{{instanceID}}'))">Add</button>
+        <button class="w3-btn w3-margin-top w3-margin-bottom" type="button" onclick="addTopic($('#{{instanceID}}'), '{{instanceID}}')">Add</button>
     </form>
+    <div id="success{{instanceID}}" class="w3-green w3-large w3-padding w3-center" hidden>Successfully added!</div>
 
     {% load static %}
     <script type="text/javascript" src="{% static 'js/src/addTopic.js' %}"></script>
