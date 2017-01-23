@@ -25,7 +25,7 @@ class AddPost(Component):
         context['instanceID'] = instanceID
         return TemplateResponse(request, 'addPost.html', context).render()
 
-    def handleAJAXRequest(self, request):
+    def handleAJAXRequest(self, request, instanceID):
         if request.method == 'POST':
             user = request.user
             topicID = request.POST.get('topic')

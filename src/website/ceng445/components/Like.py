@@ -20,7 +20,7 @@ class Like(Component):
     def createHTML(self, request, instanceID):
         return TemplateResponse(request, 'like.html', {}).render()
 
-    def handleAJAXRequest(self, request):
+    def handleAJAXRequest(self, request, instanceID):
         if request.method == 'POST':
             result = self['DB'].manageLike(request)
             return JsonResponse(result)

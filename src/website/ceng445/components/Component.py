@@ -14,7 +14,7 @@ class Component(object):
     def createHTML(self, request, instanceID):
         pass
 
-    def handleAJAXRequest(self, request):
+    def handleAJAXRequest(self, request, instanceID):
         pass
 
     def attributes(self):

@@ -2,6 +2,9 @@
 {% block content %}
 
 <style media="screen">
+    ul {
+        list-style-type: none;
+    }
     div {
         display: block;
     }
@@ -19,36 +22,38 @@
     }
 </style>
 
-<ul id="initPage">
-    <li class="formLi">
-        <div class="inputForms">
-            User Register:
-            <form method="POST" action="register">
-                {% csrf_token %}
-                <table>
-                    {{userregister}}
-                </table>
-                <input type="submit">
-            </form>
-        </div>
-    </li>
+<div class="w3-container w3-teal w3-margin-top w3-margin-bottom">
+    <ul id="initPage">
+        <li class="formLi">
+            <div class="inputForms">
+                User Register:
+                <form method="POST" action="register">
+                    {% csrf_token %}
+                    <table>
+                        {{userregister}}
+                    </table>
+                    <input type="submit">
+                </form>
+            </div>
+        </li>
 
-    <li class="formLi">
-        <div class="inputForms">
-            User Login:
-            <form method="POST" action="login">
-                {% csrf_token %}
-                <table>
-                    {{userlogin}}
-                </table>
-                <input type="submit">
-            </form>
-        </div>
-    </li>
-</ul>
+        <li class="formLi">
+            <div class="inputForms">
+                User Login:
+                <form method="POST" action="login">
+                    {% csrf_token %}
+                    <table>
+                        {{userlogin}}
+                    </table>
+                    <input type="submit">
+                </form>
+            </div>
+        </li>
+    </ul>
+</div>
 
 <div>
-    <a href="home" name="toMain" value="Main Page">Main Page</a>
+    <a class="w3-btn" href="home" name="toMain" value="Main Page">Main Page</a>
 </div>
 
 {% endblock %}

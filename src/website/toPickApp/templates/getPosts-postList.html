@@ -1,0 +1,54 @@
+{% load static %}
+
+<ul>
+    {% for post in posts %}
+    <li>
+        <div>
+            <strong>{{post.username}}</strong> --
+            <strong>{{post.date|date:"D d M Y H:i"}}</strong>
+        </div>
+        <div class="w3-border">
+            {{post.posttext}}
+        </div>
+        <div class="likepanel">
+            {% csrf_token %}
+            <span>
+                <span id="{{post.id}}likecount">
+                    {{post.likecount}}
+                </span>
+                {% if post.likeActive%}
+                    {% if post.liked %}
+                        <img id="{{post.id}}liked" class="icon" src="{% static 'icons/like_red.png' %}" alt="liked" onclick="likePost('{{post.likeID}}','{{post.id}}')"></img>
+                    {% else %}
+                        <img id="{{post.id}}liked" class="icon" src="{% static 'icons/like_white.png' %}" alt="notliked" onclick="likePost('{{post.likeID}}','{{post.id}}')"></img>
+                    {% endif %}
+                {% else %}
+                    {% if post.liked %}
+                        <img id="{{post.id}}liked" class="icon" src="{% static 'icons/like_red.png' %}" alt="liked"></img>
+                    {% else %}
+                        <img id="{{post.id}}liked" class="icon" src="{% static 'icons/like_white.png' %}" alt="notliked"></img>
+                    {% endif %}
+                {% endif %}
+            </span>
+            <span>
+                <span id="{{post.id}}dislikecount">
+                    {{post.dislikecount}}
+                </span>
+                {% if post.dislikeActive %}
+                    {% if post.disliked %}
+                        <img id="{{post.id}}disliked" class="icon" src="{% static 'icons/dislike_black.png' %}" alt="disliked" onclick="dislikePost('{{post.dislikeID}}','{{post.id}}')"></img>
+                    {% else %}
+                        <img id="{{post.id}}disliked" class="icon" src="{% static 'icons/dislike_white.png' %}" alt="notdisliked" onclick="dislikePost('{{post.dislikeID}}','{{post.id}}')"></img>
+                    {% endif %}
+                {% else %}
+                    {% if post.disliked %}
+                        <img id="{{post.id}}disliked" class="icon" src="{% static 'icons/dislike_black.png' %}" alt="disliked"></img>
+                    {% else %}
+                        <img id="{{post.id}}disliked" class="icon" src="{% static 'icons/dislike_white.png' %}" alt="notdisliked"></img>
+                    {% endif %}
+                {% endif %}
+            </span>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
