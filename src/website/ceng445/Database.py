@@ -42,6 +42,7 @@ class Database:
             topic.save()
             return True
         except IntegrityError:
+            traceback.print_exc()
             return False
 
     def addPost(self, user, topic, postText):
@@ -137,6 +138,7 @@ class Database:
                     postInfo['posttext'] = post.text
                     postInfo['username'] = post.user.username
                     postInfo['date'] = post.date
+                    postInfo['postTopic'] = post.topic.name
                     postInfo['likecount'] = post.liking_users.count()
                     postInfo['dislikecount'] = post.disliking_users.count()
                     postInfo['liked'] = False
