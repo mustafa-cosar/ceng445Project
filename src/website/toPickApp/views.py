@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views import View
 from toPickApp.forms import *
 from django.contrib.auth.models import User
+from django.contrib import auth
 from ceng445 import *
 import pickle
 import re
@@ -197,6 +198,15 @@ def home(request):
     context['userlogin'] = UserLogin(request.POST)
     return render(request, 'register.html',context)
 
+def logout(request):
+    if request.method=='POST':
+        print(request.user.username)
+        if request.user.is_active:
+            auth.logout(request)
+        del request.user
+        del request.session['app']
+    return redirect('/')
+
 def register(request):
     if request.method=='POST':
         form=UserRegister(request.POST)
@@ -209,6 +219,7 @@ def register(request):
             user = User.objects.create_user(username, email, password)
             user.is_active = True # if you want to set active
             user.save()
+            request.user = user
             return redirect('/home')
     else:
         ...
@@ -224,7 +235,9 @@ def login(request):
         if form.is_valid():
             username, password = form.cleaned_data['username'], form.cleaned_data['password']
             user = User.objects.get(username=username)
+            print('Logged in')
             user.is_active = True # if you want to set active
+            request.user = user
             return redirect('/home')
     else:
         ...

@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from toPickApp.views import BaseClass, AjaxHandler, home,register,login
+from toPickApp.views import BaseClass, AjaxHandler, home,register,login,logout
 
 urlpatterns = [
     url(r'^$', home),
@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^home$', BaseClass.as_view()),
     url(r'^load$', BaseClass.as_view()),
     url(r'^login$', login),
+    url(r'^logout$', logout),
     url(r'^register$', register),
     url(r'^loadComponent$', BaseClass.as_view(name='loadComponent')),
     url(r'^addInstance$', BaseClass.as_view(name='addInstance')),

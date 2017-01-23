@@ -70,6 +70,11 @@
         <input class="w3-btn w3-margin-top w3-margin-bottom" type="submit" value="Load Design">
     </form>
 
+    <form id="logout" class="w3-container w3-teal w3-half" action="logout" method="POST">
+        {% csrf_token %}
+        <input class="w3-btn w3-margin-top w3-margin-bottom" type="submit" value="Logout">
+    </form>
+
 </div>
 
 {% endblock %}
