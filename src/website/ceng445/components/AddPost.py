@@ -28,6 +28,8 @@ class AddPost(Component):
     def handleAJAXRequest(self, request, instanceID):
         if request.method == 'POST':
             user = request.user
+            if not user.is_active:
+                raise Exception
             topicID = request.POST.get('topic')
             topic = Topic.objects.get(id=topicID)
             text = request.POST.get('text')
