@@ -56,7 +56,7 @@ class Database:
         except IntegrityError:
             return False
 
-    def getTopics(self,request, instanceID):
+    def getTopics(self, request, instanceID):
         context = {}
         try:
             app = request.session.get('app', None)
@@ -78,7 +78,6 @@ class Database:
             context['filterID'] = 0
         context['topics'] = []
         topics = Topic.objects.all()
-        print(topics)
         user = request.user
         for topic in topics:
             topicInfo = {}
@@ -99,6 +98,28 @@ class Database:
                 topicInfo['followActive'] = False
             context['topics'].append(topicInfo)
         return context
+
+    def filterTopics(self, request):
+        context = {}
+        filterWith = request.POST.get('topicText', None)
+        context['topics'] = []
+        topics = Topic.objects.filter(name__icontains=filterWith)
+        user = request.user
+        for topic in topics:
+            topicInfo = {}
+            topicInfo['id'] = topic.id
+            topicInfo['name'] = topic.name
+            if user and user.is_active:
+                if topic in list(user.followers.all()):
+                    topicInfo['following'] = True
+                else:
+                    topicInfo['following'] = False
+            else:
+                topicInfo['following'] = False
+                topicInfo['followActive'] = False
+            context['topics'].append(topicInfo)
+        return context
+
 
     def getPosts(self, request, instanceID):
         context = {}
