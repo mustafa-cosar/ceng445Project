@@ -1,16 +1,16 @@
 {% load static %}
 
-<ul>
+<ul class="w3-ul w3-margin-bottom w3-hoverable">
     {% for post in posts %}
     <li>
-        <div>
+        <div class="">
             <strong>{{post.username}}</strong> --
             <strong>{{post.date|date:"D d M Y H:i"}}</strong>
         </div>
-        <div class="w3-border">
+        <div class="w3-container">
             {{post.posttext}}
         </div>
-        <div class="likepanel">
+        <div class="likepanel w3-container">
             {% csrf_token %}
             <span>
                 <span id="{{post.id}}likecount">
