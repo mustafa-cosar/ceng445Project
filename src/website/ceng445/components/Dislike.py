@@ -21,7 +21,7 @@ class Dislike(Component):
     def createHTML(self, request, instanceID):
         return TemplateResponse(request, 'dislike.html', {}).render()
 
-    def handleAJAXRequest(self, request):
+    def handleAJAXRequest(self, request, instanceID):
         if request.method == 'POST':
             result = self['DB'].manageDislike(request)
             return JsonResponse(result)

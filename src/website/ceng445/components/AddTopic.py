@@ -21,7 +21,7 @@ class AddTopic(Component):
         context['instanceID'] = instanceID
         return TemplateResponse(request, 'addTopic.html', context).render()
 
-    def handleAJAXRequest(self, request):
+    def handleAJAXRequest(self, request, instanceID):
 
         if request.method == 'POST':
             topicName = request.POST.get('topicName', None)

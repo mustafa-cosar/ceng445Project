@@ -1,5 +1,6 @@
 from .Component import Component
 from django.template.response import TemplateResponse
+from django.shortcuts import render
 
 
 class GetPosts(Component):
@@ -17,6 +18,11 @@ class GetPosts(Component):
     def createHTML(self, request, instanceID):
         context = self['DB'].getPosts(request, instanceID)
         return TemplateResponse(request, 'getPosts.html', context).render()
+
+    def handleAJAXRequest(self, request, instanceID):
+        context = self['DB'].getPosts(request, instanceID)
+        print(context)
+        return render(request, 'getPosts-postList.html', context)
 
     def execute(self):
 
